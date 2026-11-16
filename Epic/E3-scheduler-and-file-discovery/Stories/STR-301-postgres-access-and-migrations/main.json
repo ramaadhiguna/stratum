@@ -1,0 +1,105 @@
+{
+  "key": "STR-301",
+  "type": "Story",
+  "epic": "STR-E3",
+  "title": "Postgres access layer & migrations (stratum schema)",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 3,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-db",
+    "migrations"
+  ],
+  "labels": [],
+  "aws_equivalent": "RDS PostgreSQL",
+  "user_story": {
+    "as_a": "developer",
+    "i_want": "a shared Postgres pool and versioned migrations for Stratum's own tables",
+    "so_that": "every service uses the same schema-evolution process"
+  },
+  "description": "stratum-db builds a PgPool from DatabaseSettings. Migrations live in `migrations/` at the repo root and run via sqlx. The first migration creates schema `stratum` with `ingest_files` (the ledger), `checkpoints` and `job_runs` (see docs/architecture.md). Repositories: IngestFileRepo (`insert_discovered` returning only newly inserted rows, `set_status`), CheckpointRepo (get/set), JobRunRepo (start/finish). Decide between a Postgres enum and text + CHECK for the status column, and record it in an ADR.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "an empty database",
+      "when": "migrations run",
+      "then": "all tables exist; running again is a no-op"
+    },
+    {
+      "id": "AC2",
+      "given": "a (bucket, key) already in the ledger",
+      "when": "insert_discovered is called with it",
+      "then": "nothing is inserted and it is not returned (ON CONFLICT DO NOTHING ... RETURNING)"
+    },
+    {
+      "id": "AC3",
+      "given": "the compose Postgres",
+      "when": "the repository integration tests run",
+      "then": "they pass (sqlx::test or #[ignore])"
+    },
+    {
+      "id": "AC4",
+      "given": "CI without a database",
+      "when": "the workspace builds",
+      "then": "it succeeds with SQLX_OFFLINE=true and the committed .sqlx metadata"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "sqlx query!/query_as! macros (compile-time checked SQL)",
+    "FromRow",
+    "Sharing a pool (PgPool is cheap to clone)",
+    "Transactions",
+    "Mapping enums with sqlx::Type",
+    "Option<T> for nullable columns"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-103",
+      "STR-106"
+    ],
+    "blocks": [
+      "STR-302",
+      "STR-304",
+      "STR-501"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": [
+      "`cargo sqlx prepare --workspace` run and `.sqlx/` committed"
+    ]
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "sqlx docs",
+      "url": "https://docs.rs/sqlx/latest/sqlx/"
+    },
+    {
+      "title": "sqlx-cli (migrations, offline mode)",
+      "url": "https://github.com/launchbadge/sqlx/tree/main/sqlx-cli"
+    },
+    {
+      "title": "PostgreSQL: INSERT ... ON CONFLICT",
+      "url": "https://www.postgresql.org/docs/current/sql-insert.html"
+    },
+    {
+      "title": "Stratum architecture",
+      "url": "../../../../docs/architecture.md"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

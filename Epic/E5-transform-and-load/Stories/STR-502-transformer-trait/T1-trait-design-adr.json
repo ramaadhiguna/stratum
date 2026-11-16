@@ -1,0 +1,22 @@
+{
+  "key": "STR-502-T1",
+  "type": "Sub-task",
+  "parent": "STR-502",
+  "title": "Trait design + ADR 0002",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "associated Row type",
+      "done": false
+    },
+    {
+      "item": "dispatch decision",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

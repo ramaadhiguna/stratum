@@ -1,0 +1,79 @@
+{
+  "key": "STR-303",
+  "type": "Story",
+  "epic": "STR-E3",
+  "title": "Single-runner guarantee with Postgres advisory locks",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "Medium",
+  "story_points": 3,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-scheduler"
+  ],
+  "labels": [],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "operator",
+    "i_want": "to run two scheduler instances without any job running twice",
+    "so_that": "deploys need no downtime"
+  },
+  "description": "Before a run, take a session-level `pg_try_advisory_lock` on a key derived from the job name, holding a dedicated connection from the pool for the whole run. Release it in a guard that also runs on error. If the lock is taken, the run is skipped and logged.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "two scheduler processes",
+      "when": "they run for 5 minutes",
+      "then": "each heartbeat minute has exactly one job_runs row"
+    },
+    {
+      "id": "AC2",
+      "given": "the instance holding a lock is killed with -9 mid-run",
+      "when": "the next tick fires",
+      "then": "the other instance runs the job (the lock died with the connection)"
+    },
+    {
+      "id": "AC3",
+      "given": "the lock-key derivation",
+      "when": "it is unit-tested",
+      "then": "it is stable and documented"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "RAII and Drop guards",
+    "Lifetimes of a borrowed pool connection",
+    "Error-safe cleanup",
+    "Hashing a string to i64"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-302"
+    ],
+    "blocks": [
+      "STR-306"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "PostgreSQL: Advisory locks",
+      "url": "https://www.postgresql.org/docs/current/explicit-locking.html#ADVISORY-LOCKS"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

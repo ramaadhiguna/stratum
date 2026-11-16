@@ -1,0 +1,121 @@
+{
+  "key": "STR-302",
+  "type": "Story",
+  "epic": "STR-E3",
+  "title": "Scheduler core: cron jobs, run loop & run history",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 8,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-scheduler"
+  ],
+  "labels": [],
+  "aws_equivalent": "EventBridge Scheduler",
+  "user_story": {
+    "as_a": "platform",
+    "i_want": "a scheduler that runs registered jobs on cron schedules and records every run",
+    "so_that": "background work happens on time and is auditable"
+  },
+  "description": "Define a `Job` trait: `name()`, `schedule()` (cron, UTC) and an async `run(&JobContext)` returning a JobOutcome or an error. The registry holds `Vec<Arc<dyn Job>>`. Each job gets its own loop: compute the next fire time with croner, sleep until then, run with a timeout, and write a `job_runs` row (start, end, status, error, details JSON). The same job never overlaps itself in-process; an overlapping run is skipped with a WARN. Config can disable a job or override its schedule. Include a `heartbeat` job (every minute) for testing, plus `/healthz` on :8082.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "the heartbeat job",
+      "when": "the scheduler runs for 3 minutes",
+      "then": "3 job_runs rows exist, each started at second 0 (±1 s)"
+    },
+    {
+      "id": "AC2",
+      "given": "a job that returns an error or panics",
+      "when": "it runs",
+      "then": "the run is recorded as failed with the message, and other jobs keep running"
+    },
+    {
+      "id": "AC3",
+      "given": "a job exceeding its timeout",
+      "when": "it runs",
+      "then": "it is cancelled and recorded as timed_out"
+    },
+    {
+      "id": "AC4",
+      "given": "a run still in progress when the next tick fires",
+      "when": "the tick fires",
+      "then": "the new run is skipped with a WARN"
+    },
+    {
+      "id": "AC5",
+      "given": "the next-fire function",
+      "when": "unit-tested with fixed 'now' values",
+      "then": "results are correct without real waiting"
+    },
+    {
+      "id": "AC6",
+      "given": "a job disabled in config",
+      "when": "the scheduler starts",
+      "then": "it is not registered"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Trait objects: Arc<dyn Job>",
+    "async fn in traits and dyn compatibility (async-trait or BoxFuture)",
+    "Catching panics via JoinError::is_panic",
+    "tokio::time::timeout",
+    "DateTime<Utc> arithmetic",
+    "AtomicBool"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-301"
+    ],
+    "blocks": [
+      "STR-303",
+      "STR-304",
+      "STR-306",
+      "STR-601",
+      "STR-603"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-job-trait-registry.json",
+    "T2-next-fire.json",
+    "T3-run-loop.json",
+    "T4-job-runs-persistence.json",
+    "T5-config-overrides.json"
+  ],
+  "estimate_hours_total": 12,
+  "references": [
+    {
+      "title": "croner docs (cron parsing)",
+      "url": "https://docs.rs/croner/latest/croner/"
+    },
+    {
+      "title": "EventBridge Scheduler: schedule types (cron/rate)",
+      "url": "https://docs.aws.amazon.com/scheduler/latest/UserGuide/schedule-types.html"
+    },
+    {
+      "title": "The Rust Book ch.10.2: Traits",
+      "url": "https://doc.rust-lang.org/book/ch10-02-traits.html"
+    },
+    {
+      "title": "The Rust Book ch.15: Smart pointers (Box, Rc, Arc...)",
+      "url": "https://doc.rust-lang.org/book/ch15-00-smart-pointers.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

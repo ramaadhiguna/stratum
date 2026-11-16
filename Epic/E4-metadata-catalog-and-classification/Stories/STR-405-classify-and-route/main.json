@@ -1,0 +1,110 @@
+{
+  "key": "STR-405",
+  "type": "Story",
+  "epic": "STR-E4",
+  "title": "Classify handler: categorise records & route to staged batches",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "Highest",
+  "story_points": 8,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-worker"
+  ],
+  "labels": [],
+  "aws_equivalent": "S3 PutObject, SQS SendMessage, DynamoDB",
+  "user_story": {
+    "as_a": "platform",
+    "i_want": "every record in a raw file categorised by product_type and data_type and grouped into one staged file per data_type",
+    "so_that": "the transform stage receives homogeneous batches"
+  },
+  "description": "`ClassifyHandler` implements MessageHandler. It parses the RawFileMessage and checks the ledger (if the file is already past `classified`, it acks and skips). It then decodes the file (STR-404) and, for each record: looks up the source (unknown or disabled goes to quarantine) and the catalog entry (unknown name goes to quarantine), removes `drop_fields`, checks `required_fields`, and enriches the record with product_type/data_type/tenant. Records are grouped per data_type. Each group is written as gzip NDJSON to a **deterministic** staged key, and one TransformMessage is sent per group. Finally it updates the ledger to `classified` with counts (total, classified, quarantined) and acks.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "a file mixing metric, event and log records",
+      "when": "it is classified",
+      "then": "3 staged objects and 3 transform messages exist, and the counts add up to the total"
+    },
+    {
+      "id": "AC2",
+      "given": "the same message delivered twice",
+      "when": "both are handled",
+      "then": "the staged keys are identical and the ledger counts aren't doubled"
+    },
+    {
+      "id": "AC3",
+      "given": "records from an unknown source",
+      "when": "the file is classified",
+      "then": "the file succeeds and those records are counted as quarantined"
+    },
+    {
+      "id": "AC4",
+      "given": "a catalog entry with drop_fields [email]",
+      "when": "a record containing email is classified",
+      "then": "the staged record has no email field"
+    },
+    {
+      "id": "AC5",
+      "given": "DynamoDB is unavailable",
+      "when": "a message is handled",
+      "then": "the result is Retry, not Reject"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "HashMap<DataType, Vec<_>> with the entry API",
+    "Enums as map keys (Hash, Eq)",
+    "Moving vs borrowing records into groups",
+    "Composition: the handler holds Arc<dyn MetadataStore> etc.",
+    "Mapping errors to HandlerResult"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-402",
+      "STR-403",
+      "STR-404",
+      "STR-305"
+    ],
+    "blocks": [
+      "STR-406",
+      "STR-504"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-handler-skeleton.json",
+    "T2-categorise.json",
+    "T3-group-and-stage.json",
+    "T4-messages-and-ledger.json",
+    "T5-idempotency-tests.json"
+  ],
+  "estimate_hours_total": 14,
+  "references": [
+    {
+      "title": "Stratum architecture",
+      "url": "../../../../docs/architecture.md"
+    },
+    {
+      "title": "The Rust Book ch.8: Common collections",
+      "url": "https://doc.rust-lang.org/book/ch08-00-common-collections.html"
+    },
+    {
+      "title": "The Rust Book ch.4: Ownership",
+      "url": "https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

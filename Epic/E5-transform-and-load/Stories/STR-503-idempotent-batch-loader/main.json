@@ -1,0 +1,100 @@
+{
+  "key": "STR-503",
+  "type": "Story",
+  "epic": "STR-E5",
+  "title": "Idempotent bulk loader",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-db"
+  ],
+  "labels": [],
+  "aws_equivalent": "RDS PostgreSQL",
+  "user_story": {
+    "as_a": "platform",
+    "i_want": "each staged batch inserted in one transaction with duplicates ignored",
+    "so_that": "retries never double-count data"
+  },
+  "description": "Load with `INSERT ... SELECT * FROM UNNEST($1::uuid[], $2::timestamptz[], ...) ON CONFLICT DO NOTHING`, in chunks of 5,000 rows per statement and one transaction per staged file. Report inserted vs duplicate counts from rows_affected. Share one generic helper or `macro_rules!` across the 3 tables instead of copy-pasting. Stretch: compare against COPY.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "a staged file",
+      "when": "it is loaded twice",
+      "then": "the second load inserts 0 rows and reports them all as duplicates"
+    },
+    {
+      "id": "AC2",
+      "given": "50k rows in a release build",
+      "when": "they are loaded locally",
+      "then": "it takes under 5 s"
+    },
+    {
+      "id": "AC3",
+      "given": "a failure in the middle of a file",
+      "when": "it is loaded",
+      "then": "the whole file's transaction rolls back"
+    },
+    {
+      "id": "AC4",
+      "given": "the 3 tables",
+      "when": "they are loaded",
+      "then": "they share one helper or macro"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Building column vectors",
+    "Transactions (&mut *tx)",
+    "Generic helpers or declarative macros (macro_rules!)",
+    "rows_affected"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-501",
+      "STR-502"
+    ],
+    "blocks": [
+      "STR-504",
+      "STR-603"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-unnest-metrics.json",
+    "T2-generalise.json",
+    "T3-tx-idempotency-tests.json",
+    "T4-copy-benchmark.json"
+  ],
+  "estimate_hours_total": 9,
+  "references": [
+    {
+      "title": "sqlx docs",
+      "url": "https://docs.rs/sqlx/latest/sqlx/"
+    },
+    {
+      "title": "PostgreSQL: INSERT ... ON CONFLICT",
+      "url": "https://www.postgresql.org/docs/current/sql-insert.html"
+    },
+    {
+      "title": "PostgreSQL: COPY",
+      "url": "https://www.postgresql.org/docs/current/sql-copy.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

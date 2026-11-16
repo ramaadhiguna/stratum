@@ -1,0 +1,22 @@
+{
+  "key": "STR-402-T1",
+  "type": "Sub-task",
+  "parent": "STR-402",
+  "title": "MetadataStore trait and the DynamoDB implementation",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "GetItem per lookup",
+      "done": false
+    },
+    {
+      "item": "map items to structs",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

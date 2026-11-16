@@ -1,0 +1,82 @@
+{
+  "key": "STR-603",
+  "type": "Story",
+  "epic": "STR-E6",
+  "title": "Job: hourly metric rollups",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "Medium",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-scheduler",
+    "migrations"
+  ],
+  "labels": [],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "analyst",
+    "i_want": "hourly aggregates of metrics",
+    "so_that": "dashboards don't scan raw rows"
+  },
+  "description": "Create `telemetry.metrics_hourly` (tenant_id, source_id, name, hour, count, sum, min, max) with a composite PK. The `rollup-metrics-hourly` job runs at :10 past each hour. It aggregates the previous complete hour and re-aggregates the hour before it (to absorb late data) with `INSERT ... SELECT ... GROUP BY ... ON CONFLICT DO UPDATE`. Backfill: `jobs run rollup-metrics-hourly --from --to`.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "fixture rows",
+      "when": "the job runs",
+      "then": "the rollup values equal hand-computed ones"
+    },
+    {
+      "id": "AC2",
+      "given": "the job runs twice for the same hour",
+      "when": "the second run completes",
+      "then": "the results are identical"
+    },
+    {
+      "id": "AC3",
+      "given": "a late row for the previous hour",
+      "when": "the next run completes",
+      "then": "the rollup includes it"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Truncating time to the hour",
+    "Passing job parameters",
+    "Upsert SQL from Rust"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-302",
+      "STR-503"
+    ],
+    "blocks": []
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-table-and-upsert.json",
+    "T2-job-and-windows.json",
+    "T3-fixture-tests.json"
+  ],
+  "estimate_hours_total": 7,
+  "references": [
+    {
+      "title": "PostgreSQL: INSERT ... ON CONFLICT",
+      "url": "https://www.postgresql.org/docs/current/sql-insert.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

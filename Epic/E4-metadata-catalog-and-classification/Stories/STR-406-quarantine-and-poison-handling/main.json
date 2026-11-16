@@ -1,0 +1,94 @@
+{
+  "key": "STR-406",
+  "type": "Story",
+  "epic": "STR-E4",
+  "title": "Quarantine table & poison-file handling",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-worker",
+    "stratum-cli",
+    "migrations"
+  ],
+  "labels": [],
+  "aws_equivalent": "SQS dead-letter queue",
+  "user_story": {
+    "as_a": "operator",
+    "i_want": "bad records kept with a reason, and repeatedly failing files isolated in a DLQ",
+    "so_that": "nothing is silently lost and one bad file never blocks the queue"
+  },
+  "description": "Add a migration for `stratum.quarantine` (id, file_id, line_no, source_id, name, reason, raw_text, created_at). `raw_text` is text, not jsonb, so invalid JSON is kept exactly. Use stable reason codes: unknown_source, source_disabled, unknown_name, invalid_payload, missing_required_field, decode_error. Insert in bulk with UNNEST arrays. When the handler Rejects, the ledger becomes `failed` with last_error and attempts (from the receive count), and the message reaches the DLQ after maxReceiveCount. Add `stratum-cli quarantine summary --since 1h` with counts by reason and source.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "a fixture file triggering every reason code",
+      "when": "it is processed",
+      "then": "each reason appears in `quarantine summary`"
+    },
+    {
+      "id": "AC2",
+      "given": "one file producing 10,000 quarantined records",
+      "when": "they are inserted",
+      "then": "it takes at most 10 round-trips"
+    },
+    {
+      "id": "AC3",
+      "given": "a corrupt gzip file",
+      "when": "it is received 5 times",
+      "then": "the ledger row is failed with last_error and the message is in raw-files-dlq"
+    },
+    {
+      "id": "AC4",
+      "given": "an invalid-JSON line",
+      "when": "it is quarantined",
+      "then": "raw_text equals the original line byte-for-byte"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Enum to &'static str mapping",
+    "sqlx bulk insert with arrays (UNNEST)",
+    "Vec of structs to column vectors",
+    "Parsing durations"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-405"
+    ],
+    "blocks": []
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-migration-and-repo.json",
+    "T2-wire-reasons.json",
+    "T3-failed-and-dlq.json",
+    "T4-summary-cli.json"
+  ],
+  "estimate_hours_total": 8,
+  "references": [
+    {
+      "title": "SQS: Dead-letter queues",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html"
+    },
+    {
+      "title": "sqlx docs",
+      "url": "https://docs.rs/sqlx/latest/sqlx/"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

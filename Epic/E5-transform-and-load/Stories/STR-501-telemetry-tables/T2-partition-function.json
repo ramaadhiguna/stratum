@@ -1,0 +1,22 @@
+{
+  "key": "STR-501-T2",
+  "type": "Sub-task",
+  "parent": "STR-501",
+  "title": "ensure_partitions function and default partitions",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "idempotent CREATE TABLE ... PARTITION OF",
+      "done": false
+    },
+    {
+      "item": "call from migration",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

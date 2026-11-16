@@ -1,0 +1,82 @@
+{
+  "key": "STR-208",
+  "type": "Story",
+  "epic": "STR-E2",
+  "title": "Load generator: `stratum-cli generate`",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "Medium",
+  "story_points": 3,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-cli"
+  ],
+  "labels": [],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "developer",
+    "i_want": "a CLI that generates realistic telemetry at a chosen rate",
+    "so_that": "I can exercise and demo the pipeline"
+  },
+  "description": "`stratum-cli generate --rate 200 --duration 60s --api-key <key>` sends a mix of metric/event/log envelopes for the seeded sources (STR-401 seed file). Options: `--invalid-ratio` and `--unknown-source-ratio`, plus a batch size. It honours 503 Retry-After and prints a summary: sent, accepted, rejected, retries, p50/p99 latency.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "--rate 200 --duration 60s",
+      "when": "the generator runs",
+      "then": "the achieved rate is within ±10%"
+    },
+    {
+      "id": "AC2",
+      "given": "--invalid-ratio 0.05",
+      "when": "the run finishes",
+      "then": "about 5% of records are reported rejected"
+    },
+    {
+      "id": "AC3",
+      "given": "the API returns 503 with Retry-After",
+      "when": "the generator receives it",
+      "then": "it waits and retries instead of dropping the batch"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "clap derive with subcommands",
+    "rand",
+    "tokio::time::interval",
+    "Instant timing",
+    "Percentiles by sorting a Vec"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-202"
+    ],
+    "blocks": []
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "clap derive tutorial",
+      "url": "https://docs.rs/clap/latest/clap/_derive/_tutorial/index.html"
+    },
+    {
+      "title": "reqwest docs",
+      "url": "https://docs.rs/reqwest/latest/reqwest/"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

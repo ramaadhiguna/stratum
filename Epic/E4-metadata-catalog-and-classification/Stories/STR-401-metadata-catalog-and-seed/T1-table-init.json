@@ -1,0 +1,22 @@
+{
+  "key": "STR-401-T1",
+  "type": "Sub-task",
+  "parent": "STR-401",
+  "title": "Table definitions and idempotent init",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "key schema per architecture doc",
+      "done": false
+    },
+    {
+      "item": "treat 'already exists' as success",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

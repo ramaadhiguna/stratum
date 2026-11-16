@@ -1,0 +1,88 @@
+{
+  "key": "STR-107",
+  "type": "Story",
+  "epic": "STR-E1",
+  "title": "Structured logging baseline with tracing",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "Medium",
+  "story_points": 2,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-core"
+  ],
+  "labels": [],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "operator",
+    "i_want": "structured logs with consistent fields from every service",
+    "so_that": "I can follow one file through the whole pipeline"
+  },
+  "description": "Add a shared `init_tracing()` in stratum-core using tracing-subscriber with EnvFilter (RUST_LOG). It uses pretty output locally and JSON when `STRATUM_LOG_FORMAT=json`. Convention: spans carry `file_id` / `event_id` where relevant; prefer `#[instrument]` on important functions.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "RUST_LOG=debug",
+      "when": "a service runs",
+      "then": "debug logs appear; the default level is info"
+    },
+    {
+      "id": "AC2",
+      "given": "STRATUM_LOG_FORMAT=json",
+      "when": "a service logs",
+      "then": "each line is one JSON object with timestamp, level, target, fields and span fields"
+    },
+    {
+      "id": "AC3",
+      "given": "a function annotated with #[instrument(skip(...))]",
+      "when": "it is called",
+      "then": "its log lines include the span and the non-skipped arguments"
+    },
+    {
+      "id": "AC4",
+      "given": "all binaries",
+      "when": "they start",
+      "then": "each calls the shared init exactly once"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Macros (info!, warn!) and attribute macros (#[instrument])",
+    "Cargo feature flags (tracing-subscriber `json`, `env-filter`)"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-106"
+    ],
+    "blocks": [
+      "STR-201",
+      "STR-403"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "tracing docs",
+      "url": "https://docs.rs/tracing/latest/tracing/"
+    },
+    {
+      "title": "tracing-subscriber docs",
+      "url": "https://docs.rs/tracing-subscriber/latest/tracing_subscriber/"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

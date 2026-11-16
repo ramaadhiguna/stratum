@@ -1,0 +1,100 @@
+{
+  "key": "STR-E1",
+  "type": "Epic",
+  "title": "Foundations & local platform",
+  "status": "To Do",
+  "summary": "Cargo workspace, a one-command local stand-in for every AWS service, and the shared conventions every later epic builds on.",
+  "goal": "By the end of this epic, `docker compose up` gives a working fake AWS on the laptop, the AWS SDK for Rust is proven against it, and the workspace has a shared domain model, config, errors, logging and CI.",
+  "aws_services_replaced": [
+    "S3 (RustFS)",
+    "SQS (ElasticMQ)",
+    "DynamoDB (DynamoDB Local)",
+    "RDS PostgreSQL (postgres image)"
+  ],
+  "depends_on_epics": [],
+  "success_criteria": [
+    "All four infrastructure containers start healthy with one command and survive restarts with their data.",
+    "Example programs talk to S3, SQS and DynamoDB stand-ins using the official AWS SDK for Rust.",
+    "Every PR is checked by CI (fmt, clippy -D warnings, tests).",
+    "The telemetry envelope and categories exist as tested Rust types in stratum-core."
+  ],
+  "rust_learning_outcomes": [
+    "Cargo workspaces, crates and modules",
+    "Structs, enums, derive macros and serde",
+    "Result, ?, thiserror and anyhow",
+    "First async Rust with Tokio",
+    "tracing for structured logs"
+  ],
+  "out_of_scope": [
+    "Any production deployment",
+    "Real AWS accounts"
+  ],
+  "stories": [
+    {
+      "key": "STR-101",
+      "title": "Install Docker Engine & Compose in WSL2",
+      "story_points": 1,
+      "priority": "Highest",
+      "folder": "Stories/STR-101-install-docker-in-wsl2"
+    },
+    {
+      "key": "STR-102",
+      "title": "Convert the repo into a Cargo workspace with crate skeletons",
+      "story_points": 3,
+      "priority": "Highest",
+      "folder": "Stories/STR-102-cargo-workspace-skeleton"
+    },
+    {
+      "key": "STR-103",
+      "title": "Local AWS stand-ins with Docker Compose",
+      "story_points": 5,
+      "priority": "Highest",
+      "folder": "Stories/STR-103-local-aws-stack-docker-compose"
+    },
+    {
+      "key": "STR-104",
+      "title": "Spike: AWS SDK for Rust against the local stand-ins",
+      "story_points": 3,
+      "priority": "Highest",
+      "folder": "Stories/STR-104-spike-aws-sdk-rust-local"
+    },
+    {
+      "key": "STR-105",
+      "title": "Telemetry domain model in stratum-core",
+      "story_points": 5,
+      "priority": "High",
+      "folder": "Stories/STR-105-telemetry-domain-model"
+    },
+    {
+      "key": "STR-106",
+      "title": "Configuration loading & error-handling conventions",
+      "story_points": 3,
+      "priority": "High",
+      "folder": "Stories/STR-106-config-and-error-conventions"
+    },
+    {
+      "key": "STR-107",
+      "title": "Structured logging baseline with tracing",
+      "story_points": 2,
+      "priority": "Medium",
+      "folder": "Stories/STR-107-tracing-baseline"
+    },
+    {
+      "key": "STR-108",
+      "title": "CI pipeline on GitHub Actions",
+      "story_points": 2,
+      "priority": "Medium",
+      "folder": "Stories/STR-108-ci-github-actions"
+    },
+    {
+      "key": "STR-109",
+      "title": "Stretch: `stratum-cli board` to view this Epic/ folder as a sprint board",
+      "story_points": 3,
+      "priority": "Low",
+      "folder": "Stories/STR-109-board-cli"
+    }
+  ],
+  "total_story_points": 27,
+  "owner": "Rama",
+  "created": "2026-11-16"
+}

@@ -1,0 +1,22 @@
+{
+  "key": "STR-302-T1",
+  "type": "Sub-task",
+  "parent": "STR-302",
+  "title": "Job trait, JobContext and registry",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "trait design",
+      "done": false
+    },
+    {
+      "item": "context holds pool, AWS clients, settings",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

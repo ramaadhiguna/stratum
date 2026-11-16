@@ -1,0 +1,22 @@
+{
+  "key": "STR-501-T1",
+  "type": "Sub-task",
+  "parent": "STR-501",
+  "title": "Tables, keys and indexes",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "three tables",
+      "done": false
+    },
+    {
+      "item": "composite PKs including the partition key",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

@@ -1,0 +1,26 @@
+{
+  "key": "STR-105-T4",
+  "type": "Sub-task",
+  "parent": "STR-105",
+  "title": "Round-trip and table-driven tests",
+  "status": "To Do",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "round-trip example JSON",
+      "done": false
+    },
+    {
+      "item": "unknown variant error",
+      "done": false
+    },
+    {
+      "item": ">= 6 validation cases",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

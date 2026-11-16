@@ -1,0 +1,18 @@
+{
+  "key": "STR-607-T1",
+  "type": "Sub-task",
+  "parent": "STR-607",
+  "title": "Multi-stage Dockerfile with cargo-chef",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "planner/cacher/builder/runtime stages",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

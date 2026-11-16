@@ -1,0 +1,22 @@
+{
+  "key": "STR-505-T4",
+  "type": "Sub-task",
+  "parent": "STR-505",
+  "title": "CI job",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "compose or service containers",
+      "done": false
+    },
+    {
+      "item": "trigger strategy",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

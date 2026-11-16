@@ -1,0 +1,72 @@
+{
+  "key": "STR-E5",
+  "type": "Epic",
+  "title": "Transform & load into Postgres",
+  "status": "Backlog",
+  "summary": "The transform worker role: typed transformers per data_type and an idempotent bulk loader into partitioned tables.",
+  "goal": "Staged batches become rows in day-partitioned telemetry tables idempotently, and an automated end-to-end test proves the whole pipeline from HTTP to Postgres.",
+  "aws_services_replaced": [
+    "RDS PostgreSQL"
+  ],
+  "depends_on_epics": [
+    "STR-E4"
+  ],
+  "success_criteria": [
+    "metrics, events and logs tables are partitioned by day with partition pruning.",
+    "One transformer per data_type behind a common trait, each thoroughly table-tested.",
+    "Re-loading any staged file never duplicates rows.",
+    "An e2e test sends 1,000 records in and checks every stage's counts."
+  ],
+  "rust_learning_outcomes": [
+    "Traits with associated types",
+    "Enum dispatch vs trait objects",
+    "Table-driven tests",
+    "Bulk loading with sqlx (UNNEST/COPY)",
+    "Transactions",
+    "Integration tests and the lib + bin crate pattern"
+  ],
+  "out_of_scope": [
+    "Query API for consumers of the data",
+    "Schema migrations of telemetry payloads across versions"
+  ],
+  "stories": [
+    {
+      "key": "STR-501",
+      "title": "Day-partitioned telemetry tables",
+      "story_points": 5,
+      "priority": "High",
+      "folder": "Stories/STR-501-telemetry-tables"
+    },
+    {
+      "key": "STR-502",
+      "title": "Transformer trait & one transformer per data_type",
+      "story_points": 8,
+      "priority": "High",
+      "folder": "Stories/STR-502-transformer-trait"
+    },
+    {
+      "key": "STR-503",
+      "title": "Idempotent bulk loader",
+      "story_points": 5,
+      "priority": "High",
+      "folder": "Stories/STR-503-idempotent-batch-loader"
+    },
+    {
+      "key": "STR-504",
+      "title": "Transform worker role",
+      "story_points": 5,
+      "priority": "High",
+      "folder": "Stories/STR-504-transform-worker-role"
+    },
+    {
+      "key": "STR-505",
+      "title": "End-to-end pipeline test",
+      "story_points": 8,
+      "priority": "High",
+      "folder": "Stories/STR-505-end-to-end-pipeline-test"
+    }
+  ],
+  "total_story_points": 31,
+  "owner": "Rama",
+  "created": "2026-11-16"
+}

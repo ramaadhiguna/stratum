@@ -1,0 +1,103 @@
+{
+  "key": "STR-501",
+  "type": "Story",
+  "epic": "STR-E5",
+  "title": "Day-partitioned telemetry tables",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "migrations",
+    "stratum-db"
+  ],
+  "labels": [],
+  "aws_equivalent": "RDS PostgreSQL",
+  "user_story": {
+    "as_a": "analyst",
+    "i_want": "metrics, events and logs in typed tables partitioned by day",
+    "so_that": "time-range queries are fast and old data is cheap to drop"
+  },
+  "description": "Add a migration with schema `telemetry` and tables `metrics`, `events` and `logs` (columns per docs/architecture.md), each `PARTITION BY RANGE (occurred_at)` with `PRIMARY KEY (event_id, occurred_at)`. Each table also gets a DEFAULT partition to catch out-of-range rows, and an index on (tenant_id, name, occurred_at). A SQL function `telemetry.ensure_partitions(days_ahead int)` creates the missing daily partitions; the migration calls it for today through +7.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "a fresh database",
+      "when": "migrations run",
+      "then": "each table has daily partitions from today to +7 plus a default partition"
+    },
+    {
+      "id": "AC2",
+      "given": "a row for today",
+      "when": "it is inserted",
+      "then": "it lands in today's partition (checked via tableoid::regclass)"
+    },
+    {
+      "id": "AC3",
+      "given": "a duplicate (event_id, occurred_at)",
+      "when": "it is inserted with ON CONFLICT DO NOTHING",
+      "then": "it is ignored"
+    },
+    {
+      "id": "AC4",
+      "given": "a row far in the future",
+      "when": "it is inserted",
+      "then": "it lands in the default partition, and a documented query counts such rows"
+    },
+    {
+      "id": "AC5",
+      "given": "a one-day range query",
+      "when": "EXPLAIN runs",
+      "then": "the plan shows partition pruning"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Mostly SQL: a chance to compare Postgres features with what you know from RDS",
+    "sqlx::test for verification"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-301"
+    ],
+    "blocks": [
+      "STR-503",
+      "STR-601"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-tables-and-keys.json",
+    "T2-partition-function.json",
+    "T3-verification.json"
+  ],
+  "estimate_hours_total": 7,
+  "references": [
+    {
+      "title": "PostgreSQL: Table partitioning",
+      "url": "https://www.postgresql.org/docs/current/ddl-partitioning.html"
+    },
+    {
+      "title": "PostgreSQL: INSERT ... ON CONFLICT",
+      "url": "https://www.postgresql.org/docs/current/sql-insert.html"
+    },
+    {
+      "title": "Stratum architecture",
+      "url": "../../../../docs/architecture.md"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

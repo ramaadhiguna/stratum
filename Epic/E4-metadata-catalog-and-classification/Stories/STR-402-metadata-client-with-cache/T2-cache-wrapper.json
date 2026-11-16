@@ -1,0 +1,26 @@
+{
+  "key": "STR-402-T2",
+  "type": "Sub-task",
+  "parent": "STR-402",
+  "title": "Cache wrapper with negative caching",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "two TTLs (or an expiry policy)",
+      "done": false
+    },
+    {
+      "item": "coalesced loads",
+      "done": false
+    },
+    {
+      "item": "errors not cached",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

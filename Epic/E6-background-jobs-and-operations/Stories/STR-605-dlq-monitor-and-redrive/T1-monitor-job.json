@@ -1,0 +1,22 @@
+{
+  "key": "STR-605-T1",
+  "type": "Sub-task",
+  "parent": "STR-605",
+  "title": "monitor-dlq job",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "queue attributes",
+      "done": false
+    },
+    {
+      "item": "WARN + metric",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

@@ -1,0 +1,87 @@
+{
+  "key": "STR-108",
+  "type": "Story",
+  "epic": "STR-E1",
+  "title": "CI pipeline on GitHub Actions",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "Medium",
+  "story_points": 2,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "ci"
+  ],
+  "labels": [
+    "devops"
+  ],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "developer",
+    "i_want": "every PR automatically checked for formatting, lints and tests",
+    "so_that": "master stays green"
+  },
+  "description": "Add `.github/workflows/ci.yml` triggered on pull_request and pushes to master: install the stable toolchain with clippy and rustfmt, cache with rust-cache, then run `cargo fmt --all --check`, `cargo clippy --workspace --all-targets -- -D warnings` and `cargo test --workspace`. Later, sqlx compile-time checked queries need `SQLX_OFFLINE=true` plus committed `.sqlx/` metadata (see STR-301). Integration tests that need Docker are marked `#[ignore]` and get their own job in STR-505.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "a PR with unformatted code",
+      "when": "CI runs",
+      "then": "the fmt step fails"
+    },
+    {
+      "id": "AC2",
+      "given": "a PR introducing a clippy warning",
+      "when": "CI runs",
+      "then": "the clippy step fails"
+    },
+    {
+      "id": "AC3",
+      "given": "a second run on the same branch",
+      "when": "CI runs",
+      "then": "the rust-cache step reports a cache hit and the run is faster"
+    },
+    {
+      "id": "AC4",
+      "given": "the README",
+      "when": "I open it on GitHub",
+      "then": "a CI status badge is shown"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "How clippy lints teach idiomatic Rust",
+    "`--all-targets` also checks tests, examples and benches"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-102"
+    ],
+    "blocks": []
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "dtolnay/rust-toolchain action",
+      "url": "https://github.com/dtolnay/rust-toolchain"
+    },
+    {
+      "title": "Swatinem/rust-cache action",
+      "url": "https://github.com/Swatinem/rust-cache"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

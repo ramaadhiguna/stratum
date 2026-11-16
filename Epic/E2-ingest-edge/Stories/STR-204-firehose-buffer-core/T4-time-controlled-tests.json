@@ -1,0 +1,32 @@
+{
+  "key": "STR-204-T4",
+  "type": "Sub-task",
+  "parent": "STR-204",
+  "title": "Tests with paused time",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 4,
+  "checklist": [
+    {
+      "item": "size trigger",
+      "done": false
+    },
+    {
+      "item": "interval trigger",
+      "done": false
+    },
+    {
+      "item": "ordering",
+      "done": false
+    },
+    {
+      "item": "no empty flush",
+      "done": false
+    }
+  ],
+  "hints": [
+    "`#[tokio::test(start_paused = true)]` needs the `test-util` feature on tokio (dev-dependency)."
+  ],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

@@ -1,0 +1,26 @@
+{
+  "key": "STR-206-T1",
+  "type": "Sub-task",
+  "parent": "STR-206",
+  "title": "Firehose HTTP endpoint",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "stream lookup",
+      "done": false
+    },
+    {
+      "item": "try_send per record",
+      "done": false
+    },
+    {
+      "item": "Firehose-like response body",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

@@ -1,0 +1,22 @@
+{
+  "key": "STR-403-T4",
+  "type": "Sub-task",
+  "parent": "STR-403",
+  "title": "Ack / Retry / Reject semantics",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "delete on ack",
+      "done": false
+    },
+    {
+      "item": "backoff visibility on retry",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

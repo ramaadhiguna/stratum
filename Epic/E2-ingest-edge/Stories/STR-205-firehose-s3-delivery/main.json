@@ -1,0 +1,109 @@
+{
+  "key": "STR-205",
+  "type": "Story",
+  "epic": "STR-E2",
+  "title": "Firehose: S3 delivery with time-partitioned keys, retries & spool",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-firehose"
+  ],
+  "labels": [],
+  "aws_equivalent": "Kinesis Data Firehose (S3 destination, retry, error output)",
+  "user_story": {
+    "as_a": "platform",
+    "i_want": "each flushed batch written to S3 under an hourly-partitioned key, retried on failure",
+    "so_that": "files are discoverable by hour and transient storage errors don't lose data"
+  },
+  "description": "Build `S3BatchSink` on the stratum-aws client. The key follows docs/architecture.md, with the hour taken from the batch's `opened_at` in UTC. Set ContentType `application/x-ndjson` and ContentEncoding `gzip`. Implement retries yourself: exponential backoff with jitter up to a configurable `retry_duration` (default 5 min). If that is exhausted, spool the batch to local disk (`./var/firehose-spool/`); a startup task re-delivers spooled files.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "a batch opened at 10:59:59Z and flushed at 11:00:05Z",
+      "when": "it is delivered",
+      "then": "its key is under hour=10"
+    },
+    {
+      "id": "AC2",
+      "given": "the key function",
+      "when": "unit-tested with increasing timestamps",
+      "then": "keys within a stream sort lexicographically in time order"
+    },
+    {
+      "id": "AC3",
+      "given": "RustFS is stopped, then restarted within retry_duration",
+      "when": "a batch is flushed",
+      "then": "retries are logged with attempt numbers and the object is eventually written"
+    },
+    {
+      "id": "AC4",
+      "given": "RustFS stays down past retry_duration",
+      "when": "a batch is flushed",
+      "then": "it is spooled to disk, and on the next start it is delivered and the spool file removed"
+    },
+    {
+      "id": "AC5",
+      "given": "the stack is up",
+      "when": "an #[ignore] integration test runs",
+      "then": "it writes a batch and reads it back intact"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "async retry loops",
+    "Duration arithmetic",
+    "Formatting timestamps",
+    "rand for jitter",
+    "ByteStream from Vec<u8>",
+    "tokio::fs",
+    "Classifying SDK errors as retryable or not"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-204",
+      "STR-104"
+    ],
+    "blocks": [
+      "STR-206",
+      "STR-304"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-key-format.json",
+    "T2-s3-sink.json",
+    "T3-retry-backoff.json",
+    "T4-disk-spool.json"
+  ],
+  "estimate_hours_total": 10,
+  "references": [
+    {
+      "title": "Firehose: S3 object name format",
+      "url": "https://docs.aws.amazon.com/firehose/latest/dev/s3-object-name.html"
+    },
+    {
+      "title": "aws-sdk-s3 docs",
+      "url": "https://docs.rs/aws-sdk-s3/latest/aws_sdk_s3/"
+    },
+    {
+      "title": "Stratum architecture",
+      "url": "../../../../docs/architecture.md"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

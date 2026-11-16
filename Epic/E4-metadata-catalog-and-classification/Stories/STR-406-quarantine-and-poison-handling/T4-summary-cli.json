@@ -1,0 +1,18 @@
+{
+  "key": "STR-406-T4",
+  "type": "Sub-task",
+  "parent": "STR-406",
+  "title": "Quarantine summary command",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "GROUP BY reason, source_id",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

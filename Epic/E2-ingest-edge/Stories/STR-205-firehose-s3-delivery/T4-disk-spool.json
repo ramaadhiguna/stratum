@@ -1,0 +1,26 @@
+{
+  "key": "STR-205-T4",
+  "type": "Sub-task",
+  "parent": "STR-205",
+  "title": "Spool to disk and re-deliver on startup",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "atomic write (temp file + rename)",
+      "done": false
+    },
+    {
+      "item": "startup scan and delivery",
+      "done": false
+    },
+    {
+      "item": "delete after success",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

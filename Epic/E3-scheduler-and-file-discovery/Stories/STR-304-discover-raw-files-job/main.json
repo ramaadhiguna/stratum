@@ -1,0 +1,102 @@
+{
+  "key": "STR-304",
+  "type": "Story",
+  "epic": "STR-E3",
+  "title": "Job: discover new raw files into the ledger",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-scheduler"
+  ],
+  "labels": [],
+  "aws_equivalent": "S3 ListObjectsV2",
+  "user_story": {
+    "as_a": "platform",
+    "i_want": "new raw files found every minute and recorded exactly once in a ledger",
+    "so_that": "every file is processed and none twice"
+  },
+  "description": "The `discover-raw-files` job lists each `raw/<stream>/` prefix with ListObjectsV2 starting after (checkpoint minus look-back). The look-back re-lists from the start of the hour before the checkpoint's hour, because a batch key uses its *open* time and slow flushes can land behind the checkpoint. Paginate, cap at N keys per run (default 1000), insert into the ledger with ON CONFLICT DO NOTHING RETURNING, and advance the checkpoint in the same transaction. Newly inserted rows go to STR-305. Counts go into job_runs.details.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "3 new raw objects",
+      "when": "the job runs",
+      "then": "3 ledger rows with status discovered exist and the checkpoint equals the greatest key"
+    },
+    {
+      "id": "AC2",
+      "given": "no new objects",
+      "when": "the job runs again",
+      "then": "0 rows are inserted"
+    },
+    {
+      "id": "AC3",
+      "given": "a late file sorting before the checkpoint but inside the look-back window",
+      "when": "the job runs",
+      "then": "it is discovered"
+    },
+    {
+      "id": "AC4",
+      "given": "2,500 objects and a cap of 1000",
+      "when": "the job runs 3 times",
+      "then": "all 2,500 are discovered with none skipped"
+    },
+    {
+      "id": "AC5",
+      "given": "objects under errors/",
+      "when": "the job runs",
+      "then": "they are never discovered"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Pagination (into_paginator / futures::StreamExt)",
+    "Lexicographic String ordering",
+    "Transactions over multiple queries",
+    "Borrowing inside loops"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-302",
+      "STR-301",
+      "STR-205"
+    ],
+    "blocks": [
+      "STR-305"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-s3-listing.json",
+    "T2-look-back.json",
+    "T3-ledger-transaction.json",
+    "T4-tests.json"
+  ],
+  "estimate_hours_total": 10,
+  "references": [
+    {
+      "title": "aws-sdk-s3 docs",
+      "url": "https://docs.rs/aws-sdk-s3/latest/aws_sdk_s3/"
+    },
+    {
+      "title": "Stratum architecture",
+      "url": "../../../../docs/architecture.md"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

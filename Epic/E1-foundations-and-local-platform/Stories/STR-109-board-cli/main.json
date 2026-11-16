@@ -1,0 +1,89 @@
+{
+  "key": "STR-109",
+  "type": "Story",
+  "epic": "STR-E1",
+  "title": "Stretch: `stratum-cli board` to view this Epic/ folder as a sprint board",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "Low",
+  "story_points": 3,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-cli"
+  ],
+  "labels": [
+    "stretch",
+    "learning"
+  ],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "learner",
+    "i_want": "a CLI that reads the Epic/ JSON files and prints the board grouped by status",
+    "so_that": "I practise serde and the filesystem on data I already own, and I can see the sprint without opening files"
+  },
+  "description": "A synchronous warm-up before the async-heavy epics. Walk `Epic/**/main.json`, deserialize stories into structs (reuse field names from the JSON), and print columns Backlog / To Do / In Progress / In Review / Done for a chosen sprint, with point totals. Flag stories whose blockers aren't Done.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "the Epic/ folder",
+      "when": "I run `stratum-cli board --sprint \"Sprint 1\"`",
+      "then": "stories appear grouped by status with points per column"
+    },
+    {
+      "id": "AC2",
+      "given": "a story blocked by an unfinished story",
+      "when": "the board prints",
+      "then": "it is marked as blocked"
+    },
+    {
+      "id": "AC3",
+      "given": "a malformed main.json",
+      "when": "the board runs",
+      "then": "it reports the file path and the serde error instead of panicking"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "std::fs and Path/PathBuf",
+    "Recursion or the walkdir crate",
+    "serde_json::from_reader into structs",
+    "Option<String> fields for nullable JSON",
+    "Sorting and grouping with iterators"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-102"
+    ],
+    "blocks": []
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "serde.rs: Serde guide",
+      "url": "https://serde.rs"
+    },
+    {
+      "title": "The Rust Book ch.13: Closures & iterators",
+      "url": "https://doc.rust-lang.org/book/ch13-00-functional-features.html"
+    },
+    {
+      "title": "clap derive tutorial",
+      "url": "https://docs.rs/clap/latest/clap/_derive/_tutorial/index.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

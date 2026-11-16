@@ -1,0 +1,26 @@
+{
+  "key": "STR-205-T3",
+  "type": "Sub-task",
+  "parent": "STR-205",
+  "title": "Exponential backoff with jitter",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "capped delay",
+      "done": false
+    },
+    {
+      "item": "overall retry_duration",
+      "done": false
+    },
+    {
+      "item": "log attempt numbers",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

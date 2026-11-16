@@ -1,0 +1,26 @@
+{
+  "key": "STR-104-T2",
+  "type": "Sub-task",
+  "parent": "STR-104",
+  "title": "SQS example: send, receive, delete against ElasticMQ",
+  "status": "To Do",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "get_queue_url",
+      "done": false
+    },
+    {
+      "item": "receive with wait_time_seconds",
+      "done": false
+    },
+    {
+      "item": "delete by receipt handle",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

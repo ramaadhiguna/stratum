@@ -1,0 +1,81 @@
+{
+  "key": "STR-305",
+  "type": "Story",
+  "epic": "STR-E3",
+  "title": "Enqueue discovered files to the raw-files queue",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 3,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-scheduler"
+  ],
+  "labels": [],
+  "aws_equivalent": "SQS SendMessageBatch",
+  "user_story": {
+    "as_a": "platform",
+    "i_want": "each newly discovered file sent to the raw-files queue",
+    "so_that": "workers can process files in parallel"
+  },
+  "description": "Build a `RawFileMessage` (STR-105) per new ledger row and send with SendMessageBatch in chunks of 10 (the SQS limit). Successful entries mark the row `queued`. A failed entry is retried once, otherwise the row stays `discovered` for reconciliation (STR-604). Put the queue client behind a small trait so it can be faked in tests.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "23 discovered rows",
+      "when": "the enqueue step runs",
+      "then": "3 batch calls (10, 10, 3) are made, 23 messages are on the queue and 23 rows are queued"
+    },
+    {
+      "id": "AC2",
+      "given": "a fake queue reporting 2 failed entries",
+      "when": "the enqueue step runs",
+      "then": "those 2 rows stay discovered"
+    },
+    {
+      "id": "AC3",
+      "given": "a message on the queue",
+      "when": "its body is deserialized",
+      "then": "it is a valid RawFileMessage matching docs/architecture.md"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "slice::chunks",
+    "Iterators: zip, filter",
+    "A trait as a testing seam",
+    "serde_json::to_string"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-304"
+    ],
+    "blocks": [
+      "STR-405",
+      "STR-505",
+      "STR-604"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "aws-sdk-sqs docs",
+      "url": "https://docs.rs/aws-sdk-sqs/latest/aws_sdk_sqs/"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

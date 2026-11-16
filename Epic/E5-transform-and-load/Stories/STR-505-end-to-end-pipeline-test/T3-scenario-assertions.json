@@ -1,0 +1,22 @@
+{
+  "key": "STR-505-T3",
+  "type": "Sub-task",
+  "parent": "STR-505",
+  "title": "Scenario and per-stage assertions",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 4,
+  "checklist": [
+    {
+      "item": "counts per stage",
+      "done": false
+    },
+    {
+      "item": "clear failure messages",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

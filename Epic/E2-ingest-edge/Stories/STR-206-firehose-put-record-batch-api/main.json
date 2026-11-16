@@ -1,0 +1,97 @@
+{
+  "key": "STR-206",
+  "type": "Story",
+  "epic": "STR-E2",
+  "title": "Firehose PutRecordBatch HTTP API, client & backpressure",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-firehose",
+    "stratum-ingest-api"
+  ],
+  "labels": [],
+  "aws_equivalent": "Kinesis Data Firehose PutRecordBatch",
+  "user_story": {
+    "as_a": "ingest API",
+    "i_want": "to send records to Firehose over HTTP like PutRecordBatch and be told when Firehose is overloaded",
+    "so_that": "producers get backpressure instead of silent drops"
+  },
+  "description": "stratum-firehose exposes `POST /v1/streams/{stream}/records` (a JSON array of up to 500 records, up to 4 MiB) and enqueues into that stream's channel. An unknown stream gets 404. A full channel gets 429 with Retry-After. The success body mirrors Firehose: `{failed_put_count, request_responses[]}`. In the ingest API, implement `RecordSink` as `FirehoseClient` (one shared reqwest::Client, configurable timeout). The ingest API returns 503 + Retry-After when Firehose says 429, and `/readyz` checks Firehose's `/healthz`.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "the full local stack",
+      "when": "I POST valid records to the ingest API",
+      "then": "within buffer_interval a gzip object containing them appears in stratum-raw"
+    },
+    {
+      "id": "AC2",
+      "given": "Firehose's channel is full",
+      "when": "the ingest API forwards records",
+      "then": "Firehose answers 429 and the ingest API answers 503 with Retry-After"
+    },
+    {
+      "id": "AC3",
+      "given": "Firehose is down",
+      "when": "I call the ingest API",
+      "then": "/readyz returns 503, POST returns 503, and nothing panics"
+    },
+    {
+      "id": "AC4",
+      "given": "FirehoseClient",
+      "when": "a contract test runs against a stub server",
+      "then": "request/response shapes and timeout behaviour are verified"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Path extractors",
+    "HashMap<String, Sender<T>>",
+    "reqwest async client",
+    "Mapping errors across crate boundaries with From",
+    "Matching on status codes"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-205",
+      "STR-202"
+    ],
+    "blocks": [
+      "STR-207"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-firehose-endpoint.json",
+    "T2-firehose-client.json",
+    "T3-backpressure-readiness.json",
+    "T4-local-e2e-check.json"
+  ],
+  "estimate_hours_total": 9,
+  "references": [
+    {
+      "title": "axum: extractors",
+      "url": "https://docs.rs/axum/latest/axum/extract/index.html"
+    },
+    {
+      "title": "reqwest docs",
+      "url": "https://docs.rs/reqwest/latest/reqwest/"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

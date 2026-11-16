@@ -1,0 +1,18 @@
+{
+  "key": "STR-607-T3",
+  "type": "Sub-task",
+  "parent": "STR-607",
+  "title": "Release profile tuning and size notes",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "before/after table in PR",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

@@ -1,0 +1,22 @@
+{
+  "key": "STR-304-T2",
+  "type": "Sub-task",
+  "parent": "STR-304",
+  "title": "Compute the look-back start key from the checkpoint",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "parse the hour from the key",
+      "done": false
+    },
+    {
+      "item": "pure fn + tests",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

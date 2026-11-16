@@ -1,0 +1,22 @@
+{
+  "key": "STR-402-T3",
+  "type": "Sub-task",
+  "parent": "STR-402",
+  "title": "Tests with a counting fake",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "AtomicUsize counter",
+      "done": false
+    },
+    {
+      "item": "concurrent lookups via JoinSet",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

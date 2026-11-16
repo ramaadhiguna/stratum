@@ -1,0 +1,22 @@
+{
+  "key": "STR-606-T4",
+  "type": "Sub-task",
+  "parent": "STR-606",
+  "title": "Optional Prometheus + Grafana profile",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "scrape config",
+      "done": false
+    },
+    {
+      "item": "one dashboard",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

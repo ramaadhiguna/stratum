@@ -1,0 +1,22 @@
+{
+  "key": "STR-103-T4",
+  "type": "Sub-task",
+  "parent": "STR-103",
+  "title": "Add .env.example and a 'Run locally' README section",
+  "status": "To Do",
+  "assignee": "Rama",
+  "estimate_hours": 1,
+  "checklist": [
+    {
+      "item": "`.env` in .gitignore",
+      "done": false
+    },
+    {
+      "item": "README: start, stop, wipe, open RustFS console and ElasticMQ UI",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

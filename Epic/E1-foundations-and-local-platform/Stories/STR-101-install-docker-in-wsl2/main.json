@@ -1,0 +1,93 @@
+{
+  "key": "STR-101",
+  "type": "Story",
+  "epic": "STR-E1",
+  "title": "Install Docker Engine & Compose in WSL2",
+  "status": "To Do",
+  "sprint": "Sprint 1",
+  "priority": "Highest",
+  "story_points": 1,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "infra"
+  ],
+  "labels": [
+    "setup",
+    "no-rust"
+  ],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "developer",
+    "i_want": "Docker Engine and Docker Compose v2 running inside my WSL2 distro",
+    "so_that": "I can run the free AWS stand-ins locally"
+  },
+  "description": "Docker is not installed in the WSL distro yet (checked 2026-11-16: `docker: command not found`). Recommended: install Docker Engine from Docker's own apt repository *inside* WSL. It's free with no licence terms, and the daemon runs via systemd. Alternative: Docker Desktop on Windows with WSL integration enabled. Its licence is free for personal use; check the terms if you use it at work. You run every command yourself; Claude only explains.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "a fresh WSL terminal",
+      "when": "I run `docker version`",
+      "then": "both the Client and Server sections print, without sudo"
+    },
+    {
+      "id": "AC2",
+      "given": "Docker is installed",
+      "when": "I run `docker compose version`",
+      "then": "a v2.x version prints"
+    },
+    {
+      "id": "AC3",
+      "given": "Docker is installed",
+      "when": "I run the hello-world image",
+      "then": "the 'Hello from Docker!' message prints"
+    },
+    {
+      "id": "AC4",
+      "given": "WSL was fully restarted (`wsl --shutdown` from Windows, then reopen)",
+      "when": "I run `docker version`",
+      "then": "the daemon is reachable without starting it by hand"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [],
+  "technical_notes": [
+    "Remove conflicting packages first (docker.io, podman-docker, etc.), as Docker's Ubuntu guide lists.",
+    "Make sure `/etc/wsl.conf` contains `[boot]` with `systemd=true` so the Docker service starts with WSL.",
+    "Do the Linux post-install step (add your user to the `docker` group), then open a new shell."
+  ],
+  "dependencies": {
+    "blocked_by": [],
+    "blocks": [
+      "STR-103"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "Docker Engine install on Ubuntu",
+      "url": "https://docs.docker.com/engine/install/ubuntu/"
+    },
+    {
+      "title": "Docker Engine Linux post-install steps",
+      "url": "https://docs.docker.com/engine/install/linux-postinstall/"
+    },
+    {
+      "title": "WSL: using systemd",
+      "url": "https://learn.microsoft.com/en-us/windows/wsl/systemd"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "key": "STR-606-T3",
+  "type": "Sub-task",
+  "parent": "STR-606",
+  "title": "Instrument scheduler and worker",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "job runs, lag, messages, records",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

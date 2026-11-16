@@ -1,0 +1,22 @@
+{
+  "key": "STR-302-T2",
+  "type": "Sub-task",
+  "parent": "STR-302",
+  "title": "Next-fire computation + tests",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "pure function taking now + cron",
+      "done": false
+    },
+    {
+      "item": "UTC only",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

@@ -1,0 +1,22 @@
+{
+  "key": "STR-604-T4",
+  "type": "Sub-task",
+  "parent": "STR-604",
+  "title": "S3 vs ledger diff",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "HashSet difference",
+      "done": false
+    },
+    {
+      "item": "report only",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

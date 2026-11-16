@@ -1,0 +1,22 @@
+{
+  "key": "STR-405-T4",
+  "type": "Sub-task",
+  "parent": "STR-405",
+  "title": "Send transform messages and update the ledger",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "one message per group",
+      "done": false
+    },
+    {
+      "item": "counts",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

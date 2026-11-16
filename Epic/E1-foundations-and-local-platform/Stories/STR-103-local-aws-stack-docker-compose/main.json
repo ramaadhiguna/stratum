@@ -1,0 +1,125 @@
+{
+  "key": "STR-103",
+  "type": "Story",
+  "epic": "STR-E1",
+  "title": "Local AWS stand-ins with Docker Compose",
+  "status": "To Do",
+  "sprint": "Sprint 1",
+  "priority": "Highest",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "infra"
+  ],
+  "labels": [
+    "setup",
+    "no-rust"
+  ],
+  "aws_equivalent": "S3, SQS, DynamoDB, RDS",
+  "user_story": {
+    "as_a": "developer",
+    "i_want": "one `docker compose up` that starts free stand-ins for S3, SQS, DynamoDB and Postgres with buckets and queues pre-created",
+    "so_that": "I can develop the whole pipeline offline and for free"
+  },
+  "description": "Create `deploy/docker-compose.yml` with four services: RustFS (S3), ElasticMQ native image (SQS), DynamoDB Local (run with `-sharedDb`) and Postgres. Use named volumes, healthchecks and pinned image tags (not `latest`). ElasticMQ queues are declared in its config file: `raw-files` and `transform`, each with a DLQ (`maxReceiveCount = 5`) and a 60 s default visibility timeout. A one-shot bootstrap container creates the S3 buckets `stratum-raw` and `stratum-staged`. The `amazon/aws-cli` image means you don't need the AWS CLI on your machine. DynamoDB tables are created later by STR-401. Ports are listed in docs/aws-alternatives.md.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "Docker is running",
+      "when": "I run `docker compose -f deploy/docker-compose.yml up -d`",
+      "then": "all four infrastructure containers report healthy within 60 s"
+    },
+    {
+      "id": "AC2",
+      "given": "the stack is up",
+      "when": "I list buckets against http://localhost:9000",
+      "then": "`stratum-raw` and `stratum-staged` exist"
+    },
+    {
+      "id": "AC3",
+      "given": "the stack is up",
+      "when": "I list queues against http://localhost:9324",
+      "then": "raw-files, raw-files-dlq, transform and transform-dlq exist, and raw-files has a redrive policy to its DLQ with maxReceiveCount 5"
+    },
+    {
+      "id": "AC4",
+      "given": "the stack is up",
+      "when": "I connect with psql using the credentials from `.env`",
+      "then": "I reach the `stratum` database"
+    },
+    {
+      "id": "AC5",
+      "given": "data was written",
+      "when": "I run `down` and then `up` again",
+      "then": "Postgres and RustFS data are still there; `down -v` wipes them"
+    },
+    {
+      "id": "AC6",
+      "given": "the repo",
+      "when": "I check git",
+      "then": "`.env` is ignored and `.env.example` is committed with dev-only values"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [],
+  "technical_notes": [
+    "RustFS runs as UID 10001, so named volumes avoid bind-mount permission issues.",
+    "DynamoDB Local without `-sharedDb` keeps a separate database per access key and region: a classic 'my table vanished' trap.",
+    "Set your own RustFS access/secret keys; don't use the well-known defaults."
+  ],
+  "dependencies": {
+    "blocked_by": [
+      "STR-101"
+    ],
+    "blocks": [
+      "STR-104",
+      "STR-301"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-compose-services.json",
+    "T2-elasticmq-queues.json",
+    "T3-healthchecks-and-bootstrap.json",
+    "T4-env-and-docs.json"
+  ],
+  "estimate_hours_total": 7.5,
+  "references": [
+    {
+      "title": "AWS alternatives decision",
+      "url": "../../../../docs/aws-alternatives.md"
+    },
+    {
+      "title": "RustFS: install with Docker",
+      "url": "https://docs.rustfs.com/installation/docker/"
+    },
+    {
+      "title": "ElasticMQ README (config, DLQ, Docker)",
+      "url": "https://github.com/softwaremill/elasticmq"
+    },
+    {
+      "title": "DynamoDB Local: deploying with Docker",
+      "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html"
+    },
+    {
+      "title": "Postgres official Docker image",
+      "url": "https://hub.docker.com/_/postgres"
+    },
+    {
+      "title": "Compose file reference: healthcheck",
+      "url": "https://docs.docker.com/reference/compose-file/services/#healthcheck"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

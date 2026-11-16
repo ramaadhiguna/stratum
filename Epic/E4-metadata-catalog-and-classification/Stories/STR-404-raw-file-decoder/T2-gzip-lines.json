@@ -1,0 +1,26 @@
+{
+  "key": "STR-404-T2",
+  "type": "Sub-task",
+  "parent": "STR-404",
+  "title": "Generic gzip + line decoding function",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "GzipDecoder over BufReader",
+      "done": false
+    },
+    {
+      "item": "line numbers",
+      "done": false
+    },
+    {
+      "item": "length limit",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

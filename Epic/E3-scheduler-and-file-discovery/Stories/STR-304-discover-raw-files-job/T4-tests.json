@@ -1,0 +1,18 @@
+{
+  "key": "STR-304-T4",
+  "type": "Sub-task",
+  "parent": "STR-304",
+  "title": "Tests incl. late file and backlog drain",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "fixture objects in RustFS or a fake lister",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

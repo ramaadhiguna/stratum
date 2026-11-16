@@ -1,0 +1,84 @@
+{
+  "key": "STR-203",
+  "type": "Story",
+  "epic": "STR-E2",
+  "title": "API-key authentication & tenant resolution",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "Medium",
+  "story_points": 3,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-ingest-api",
+    "stratum-cli"
+  ],
+  "labels": [],
+  "aws_equivalent": "API Gateway API keys",
+  "user_story": {
+    "as_a": "platform",
+    "i_want": "every request authenticated with an API key that maps to a tenant",
+    "so_that": "data is attributed to the right tenant and anonymous writes are refused"
+  },
+  "description": "Read the key from the `x-api-key` header. Config stores only SHA-256 hashes of keys, each mapped to a tenant_id (never plaintext). Implement an `AuthenticatedTenant` extractor (FromRequestParts) and compare in constant time. Health endpoints stay public. Add `stratum-cli keys hash <plaintext>` to produce config entries.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "no x-api-key header",
+      "when": "POST /v1/telemetry",
+      "then": "401 with the standard error body"
+    },
+    {
+      "id": "AC2",
+      "given": "an unknown key",
+      "when": "POST /v1/telemetry",
+      "then": "401 with exactly the same body (no hint that the key format was valid)"
+    },
+    {
+      "id": "AC3",
+      "given": "a valid key",
+      "when": "records are accepted",
+      "then": "each IngestedRecord carries that key's tenant_id"
+    },
+    {
+      "id": "AC4",
+      "given": "the config files",
+      "when": "I search them",
+      "then": "only hashes are present"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Implementing a library trait for your own type (FromRequestParts)",
+    "Associated types (Rejection)",
+    "sha2 + hex",
+    "Constant-time comparison (subtle)"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-202"
+    ],
+    "blocks": []
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "axum: extractors",
+      "url": "https://docs.rs/axum/latest/axum/extract/index.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

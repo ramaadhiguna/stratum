@@ -1,0 +1,120 @@
+{
+  "key": "STR-204",
+  "type": "Story",
+  "epic": "STR-E2",
+  "title": "Firehose: per-stream buffer with size/interval flush & gzip",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 8,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-firehose"
+  ],
+  "labels": [],
+  "aws_equivalent": "Kinesis Data Firehose (buffering hints, GZIP)",
+  "user_story": {
+    "as_a": "platform",
+    "i_want": "records buffered per delivery stream and flushed as one gzip NDJSON blob when either the size or the time threshold is hit",
+    "so_that": "object storage receives a few large files instead of millions of tiny ones"
+  },
+  "description": "Pure logic first, with no S3. Each delivery stream is a Tokio task that owns its buffer and receives `IngestedRecord`s over a **bounded** mpsc channel. It flushes when buffered uncompressed bytes reach `buffer_max_bytes` (default 5 MiB) **or** `buffer_interval` (default 60 s) has passed since the first record entered the buffer, whichever comes first. It never flushes an empty buffer. A flush produces `Batch {stream, opened_at, record_count, gzip_bytes}` and hands it to a `BatchSink` trait. The S3 sink comes in STR-205; tests use a collecting sink. Streams come from config (default: `telemetry`).",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "buffer_max_bytes = 1 KiB",
+      "when": "about 3 KiB of records are pushed",
+      "then": "at least 3 batches are produced, each decompressing to valid NDJSON in the original order"
+    },
+    {
+      "id": "AC2",
+      "given": "buffer_interval = 2 s and one record",
+      "when": "time advances 2 s (tokio::time::pause + advance; no real sleeping)",
+      "then": "exactly one batch is flushed"
+    },
+    {
+      "id": "AC3",
+      "given": "an idle stream",
+      "when": "time passes",
+      "then": "no empty batches are produced"
+    },
+    {
+      "id": "AC4",
+      "given": "a full channel",
+      "when": "a producer uses try_send",
+      "then": "it gets an error that the API layer can map to backpressure"
+    },
+    {
+      "id": "AC5",
+      "given": "a produced batch",
+      "when": "it is written to a file",
+      "then": "`zcat` decompresses it"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "tokio::spawn and JoinHandle",
+    "Bounded mpsc channels",
+    "tokio::select!",
+    "tokio::time (interval, sleep_until, Instant)",
+    "Moving buffers without copying (std::mem::take)",
+    "Vec<u8> and the Write trait",
+    "flate2 GzEncoder",
+    "Testing time with tokio test-util"
+  ],
+  "technical_notes": [
+    "Track size as uncompressed bytes (like Firehose's buffering hints); compression happens at flush.",
+    "A buffer 'opens' with its first record; that timestamp drives both the interval timer and the S3 key hour in STR-205."
+  ],
+  "dependencies": {
+    "blocked_by": [
+      "STR-105",
+      "STR-106"
+    ],
+    "blocks": [
+      "STR-205"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-stream-config-and-channels.json",
+    "T2-select-loop.json",
+    "T3-gzip-ndjson.json",
+    "T4-time-controlled-tests.json"
+  ],
+  "estimate_hours_total": 12,
+  "references": [
+    {
+      "title": "Tokio tutorial: Channels",
+      "url": "https://tokio.rs/tokio/tutorial/channels"
+    },
+    {
+      "title": "Tokio tutorial: select!",
+      "url": "https://tokio.rs/tokio/tutorial/select"
+    },
+    {
+      "title": "Tokio topics: Unit testing (time control)",
+      "url": "https://tokio.rs/tokio/topics/testing"
+    },
+    {
+      "title": "flate2 docs (gzip)",
+      "url": "https://docs.rs/flate2/latest/flate2/"
+    },
+    {
+      "title": "Firehose: S3 object name format",
+      "url": "https://docs.aws.amazon.com/firehose/latest/dev/s3-object-name.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

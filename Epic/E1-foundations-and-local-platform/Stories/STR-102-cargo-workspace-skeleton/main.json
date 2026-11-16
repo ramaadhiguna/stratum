@@ -1,0 +1,112 @@
+{
+  "key": "STR-102",
+  "type": "Story",
+  "epic": "STR-E1",
+  "title": "Convert the repo into a Cargo workspace with crate skeletons",
+  "status": "To Do",
+  "sprint": "Sprint 1",
+  "priority": "Highest",
+  "story_points": 3,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "workspace"
+  ],
+  "labels": [
+    "setup"
+  ],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "developer",
+    "i_want": "the repository organised as a Cargo workspace with one crate per component",
+    "so_that": "services share code through libraries instead of copy-paste, and build and test together"
+  },
+  "description": "Turn the root `Cargo.toml` into a *virtual manifest* (`[workspace]`, no `[package]`) with `members = [\"crates/*\"]`. Create the crates from docs/architecture.md: libraries `stratum-core`, `stratum-aws`, `stratum-db`; binaries `stratum-ingest-api`, `stratum-firehose`, `stratum-scheduler`, `stratum-worker`, `stratum-cli`. Each binary just prints its name for now. The current hello-world `src/main.rs` goes away. Shared metadata goes in `[workspace.package]` and shared dependency versions in `[workspace.dependencies]`. Node analogy: npm workspaces, where `cargo run -p <crate>` is like `npm run -w <pkg>`.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "the workspace",
+      "when": "I run `cargo build --workspace`",
+      "then": "all 8 crates compile with zero warnings"
+    },
+    {
+      "id": "AC2",
+      "given": "the workspace",
+      "when": "I run `cargo run -p stratum-ingest-api` (and each other binary)",
+      "then": "it prints its own name"
+    },
+    {
+      "id": "AC3",
+      "given": "a binary crate",
+      "when": "it calls a `pub fn` from stratum-core via a path dependency",
+      "then": "it compiles and runs, which proves cross-crate visibility"
+    },
+    {
+      "id": "AC4",
+      "given": "a dependency used by two crates",
+      "when": "I look at the manifests",
+      "then": "its version is declared once in `[workspace.dependencies]` and referenced with `workspace = true`"
+    },
+    {
+      "id": "AC5",
+      "given": "a build has run",
+      "when": "I look at the repo",
+      "then": "there is exactly one Cargo.lock and one target/ directory, both at the root"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Packages vs crates vs modules",
+    "lib.rs vs main.rs (library vs binary targets)",
+    "`mod`, `use` and `pub` visibility",
+    "Workspace inheritance (`workspace = true`)",
+    "Path dependencies",
+    "Crate names with hyphens become underscores in code (`stratum_core`)"
+  ],
+  "technical_notes": [
+    "A virtual manifest must set `resolver` explicitly; use \"3\" to match edition 2024.",
+    "`cargo new --lib crates/stratum-core` creates a library crate; without `--lib` you get a binary."
+  ],
+  "dependencies": {
+    "blocked_by": [],
+    "blocks": [
+      "STR-104",
+      "STR-105",
+      "STR-106",
+      "STR-108",
+      "STR-109"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "The Rust Book ch.7: Packages, crates & modules",
+      "url": "https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html"
+    },
+    {
+      "title": "The Rust Book ch.14.3: Cargo workspaces",
+      "url": "https://doc.rust-lang.org/book/ch14-03-cargo-workspaces.html"
+    },
+    {
+      "title": "Cargo reference: Workspaces",
+      "url": "https://doc.rust-lang.org/cargo/reference/workspaces.html"
+    },
+    {
+      "title": "Cargo reference: Resolver versions",
+      "url": "https://doc.rust-lang.org/cargo/reference/resolver.html#resolver-versions"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "title": "Definition of Ready (a story can enter a sprint when...)",
+  "updated": "2026-11-16",
+  "checklist": [
+    {
+      "id": "DOR1",
+      "item": "The user story and description are understood; open questions are answered or noted in technical_notes."
+    },
+    {
+      "id": "DOR2",
+      "item": "Acceptance criteria are testable (Given/When/Then)."
+    },
+    {
+      "id": "DOR3",
+      "item": "Every story in dependencies.blocked_by is Done (or explicitly accepted as parallel work)."
+    },
+    {
+      "id": "DOR4",
+      "item": "Story points agreed; anything above 8 is split first."
+    },
+    {
+      "id": "DOR5",
+      "item": "Tasks exist for stories of 5+ points."
+    },
+    {
+      "id": "DOR6",
+      "item": "The Rust concepts listed have been skimmed (Rust Book chapter or docs link) so the story isn't blocked on unknowns."
+    }
+  ]
+}

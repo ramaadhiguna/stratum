@@ -1,0 +1,89 @@
+{
+  "key": "STR-E6",
+  "type": "Epic",
+  "title": "Background jobs, reliability & operations",
+  "status": "Backlog",
+  "summary": "Scheduled maintenance jobs, self-healing, DLQ tooling, metrics and containerised services.",
+  "goal": "The platform maintains itself (partitions, retention, rollups), heals stuck work, surfaces failures (DLQ depth, metrics), and starts entirely in containers.",
+  "aws_services_replaced": [
+    "EventBridge Scheduler (jobs)",
+    "S3 lifecycle rules (retention job)",
+    "SQS DLQ redrive",
+    "CloudWatch metrics (Prometheus)"
+  ],
+  "depends_on_epics": [
+    "STR-E3",
+    "STR-E5"
+  ],
+  "success_criteria": [
+    "Partitions always exist ahead of time, and expired data is removed.",
+    "Hourly metric rollups are correct and idempotent.",
+    "Stuck files are re-queued automatically; DLQs can be inspected and redriven.",
+    "Every service exposes Prometheus metrics, and the whole platform starts with one compose command."
+  ],
+  "rust_learning_outcomes": [
+    "Implementing many trait impls (jobs)",
+    "SQL-heavy Rust",
+    "Enum-based state machines",
+    "The metrics facade pattern",
+    "Release profiles, static vs dynamic linking, Docker multi-stage builds"
+  ],
+  "out_of_scope": [
+    "Alert routing/paging",
+    "Kubernetes manifests"
+  ],
+  "stories": [
+    {
+      "key": "STR-601",
+      "title": "Job: create upcoming partitions",
+      "story_points": 3,
+      "priority": "High",
+      "folder": "Stories/STR-601-partition-maintenance-job"
+    },
+    {
+      "key": "STR-602",
+      "title": "Job: retention cleanup for Postgres and object storage",
+      "story_points": 3,
+      "priority": "Medium",
+      "folder": "Stories/STR-602-retention-cleanup-job"
+    },
+    {
+      "key": "STR-603",
+      "title": "Job: hourly metric rollups",
+      "story_points": 5,
+      "priority": "Medium",
+      "folder": "Stories/STR-603-hourly-metrics-rollup-job"
+    },
+    {
+      "key": "STR-604",
+      "title": "Job: reconcile stuck and missing files",
+      "story_points": 5,
+      "priority": "High",
+      "folder": "Stories/STR-604-reconcile-files-job"
+    },
+    {
+      "key": "STR-605",
+      "title": "DLQ monitoring job & redrive CLI",
+      "story_points": 5,
+      "priority": "Medium",
+      "folder": "Stories/STR-605-dlq-monitor-and-redrive"
+    },
+    {
+      "key": "STR-606",
+      "title": "Prometheus metrics for every service",
+      "story_points": 5,
+      "priority": "Medium",
+      "folder": "Stories/STR-606-prometheus-metrics"
+    },
+    {
+      "key": "STR-607",
+      "title": "Containerise all services",
+      "story_points": 5,
+      "priority": "Low",
+      "folder": "Stories/STR-607-containerize-services"
+    }
+  ],
+  "total_story_points": 31,
+  "owner": "Rama",
+  "created": "2026-11-16"
+}

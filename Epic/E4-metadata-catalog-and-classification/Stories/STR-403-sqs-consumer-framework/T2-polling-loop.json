@@ -1,0 +1,22 @@
+{
+  "key": "STR-403-T2",
+  "type": "Sub-task",
+  "parent": "STR-403",
+  "title": "Long-poll loop with Semaphore concurrency",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 4,
+  "checklist": [
+    {
+      "item": "acquire permit before spawn",
+      "done": false
+    },
+    {
+      "item": "batch receive up to free permits",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

@@ -1,0 +1,22 @@
+{
+  "key": "STR-404-T4",
+  "type": "Sub-task",
+  "parent": "STR-404",
+  "title": "Tests and a memory check",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "in-memory fixtures",
+      "done": false
+    },
+    {
+      "item": "large-file RSS observation",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

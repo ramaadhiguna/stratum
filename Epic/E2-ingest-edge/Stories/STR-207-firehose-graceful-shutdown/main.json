@@ -1,0 +1,83 @@
+{
+  "key": "STR-207",
+  "type": "Story",
+  "epic": "STR-E2",
+  "title": "Firehose: flush everything on shutdown",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 3,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-firehose"
+  ],
+  "labels": [],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "operator",
+    "i_want": "Firehose to flush all buffers before it exits",
+    "so_that": "deploys and restarts never lose buffered records"
+  },
+  "description": "On SIGTERM: stop accepting HTTP, close the channels (drop senders), let each stream task drain and flush its final batch, wait for in-flight uploads, then exit. After a configurable shutdown timeout (default 30 s), remaining batches are spooled to disk (STR-205).",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "100 records were just accepted",
+      "when": "SIGTERM is sent immediately",
+      "then": "an object with all 100 records exists and the process exits 0"
+    },
+    {
+      "id": "AC2",
+      "given": "a shutdown",
+      "when": "it completes",
+      "then": "logs show per-stream flush counts"
+    },
+    {
+      "id": "AC3",
+      "given": "S3 is down during shutdown",
+      "when": "the timeout elapses",
+      "then": "unflushed batches are spooled to disk and delivered on the next start"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "CancellationToken and TaskTracker/JoinSet (tokio-util)",
+    "Channel close semantics (recv returns None)",
+    "Drop",
+    "tokio::time::timeout"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-206"
+    ],
+    "blocks": [
+      "STR-505"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "Tokio topics: Graceful shutdown",
+      "url": "https://tokio.rs/tokio/topics/shutdown"
+    },
+    {
+      "title": "tokio-util: CancellationToken & TaskTracker",
+      "url": "https://docs.rs/tokio-util/latest/tokio_util/"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

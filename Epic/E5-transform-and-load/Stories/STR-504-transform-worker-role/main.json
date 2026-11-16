@@ -1,0 +1,96 @@
+{
+  "key": "STR-504",
+  "type": "Story",
+  "epic": "STR-E5",
+  "title": "Transform worker role",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-worker",
+    "migrations"
+  ],
+  "labels": [],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "platform",
+    "i_want": "the worker's transform role to consume transform messages and load them",
+    "so_that": "classified data reaches Postgres automatically"
+  },
+  "description": "`TransformHandler` implements MessageHandler: parse the TransformMessage, stream the staged file (reuse the decoder, made generic over `T: DeserializeOwned`), transform (STR-502), and load (STR-503). Track parts per file (an `ingest_file_parts` table, or expected/loaded counts on the ledger). The file becomes `loaded` once every data_type part is loaded. The worker binary takes `--role classify|transform|all`.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "a transform message",
+      "when": "it is handled",
+      "then": "rows land in the right table and the ledger becomes loaded once all parts are done"
+    },
+    {
+      "id": "AC2",
+      "given": "the same message delivered twice",
+      "when": "both are handled",
+      "then": "no duplicate rows and unchanged ledger counts"
+    },
+    {
+      "id": "AC3",
+      "given": "Postgres is down",
+      "when": "a message is handled",
+      "then": "it returns Retry, and succeeds after Postgres comes back"
+    },
+    {
+      "id": "AC4",
+      "given": "`--role all`",
+      "when": "the worker runs",
+      "then": "both consumers run in one process with independent concurrency settings"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Generic reuse with DeserializeOwned bounds",
+    "clap ValueEnum",
+    "Running consumers concurrently (try_join! / JoinSet)"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-403",
+      "STR-503",
+      "STR-405"
+    ],
+    "blocks": [
+      "STR-505",
+      "STR-604"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-handler.json",
+    "T2-parts-tracking.json",
+    "T3-roles.json"
+  ],
+  "estimate_hours_total": 8,
+  "references": [
+    {
+      "title": "serde.rs: Serde guide",
+      "url": "https://serde.rs"
+    },
+    {
+      "title": "clap derive tutorial",
+      "url": "https://docs.rs/clap/latest/clap/_derive/_tutorial/index.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

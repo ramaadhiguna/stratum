@@ -1,0 +1,86 @@
+{
+  "key": "STR-604",
+  "type": "Story",
+  "epic": "STR-E6",
+  "title": "Job: reconcile stuck and missing files",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-scheduler"
+  ],
+  "labels": [],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "operator",
+    "i_want": "stuck or missed files detected and re-queued automatically",
+    "so_that": "transient failures heal without manual work"
+  },
+  "description": "The `reconcile-files` job runs every 15 min:\n(a) `discovered` rows older than 5 min are enqueued (STR-305 path);\n(b) `queued`/`classified` rows not updated for 30 min with attempts < 5 get their message re-sent and attempts incremented;\n(c) rows with attempts ≥ 5 become `failed`;\n(d) the last 2 hours of S3 listing are compared with the ledger, and any keys missing from the ledger are reported.\nModel the status transitions as methods on a FileStatus enum that return Result.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "a seeded ledger row for each scenario (a–c)",
+      "when": "the job runs",
+      "then": "each row gets the expected action and status"
+    },
+    {
+      "id": "AC2",
+      "given": "a raw object missing from the ledger",
+      "when": "the job runs",
+      "then": "it is reported in job_runs.details"
+    },
+    {
+      "id": "AC3",
+      "given": "an illegal status transition (e.g. loaded to queued)",
+      "when": "it is attempted in code",
+      "then": "it returns an error (unit-tested)"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Enum state machines",
+    "HashSet difference",
+    "Time comparisons"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-305",
+      "STR-504"
+    ],
+    "blocks": []
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-status-transitions.json",
+    "T2-stuck-queries.json",
+    "T3-requeue-and-fail.json",
+    "T4-s3-ledger-diff.json"
+  ],
+  "estimate_hours_total": 9,
+  "references": [
+    {
+      "title": "The Rust Book ch.6: Enums & pattern matching",
+      "url": "https://doc.rust-lang.org/book/ch06-00-enums.html"
+    },
+    {
+      "title": "The Rust Book ch.8: Common collections",
+      "url": "https://doc.rust-lang.org/book/ch08-00-common-collections.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

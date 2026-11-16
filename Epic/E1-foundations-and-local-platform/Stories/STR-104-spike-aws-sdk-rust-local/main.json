@@ -1,0 +1,132 @@
+{
+  "key": "STR-104",
+  "type": "Story",
+  "epic": "STR-E1",
+  "title": "Spike: AWS SDK for Rust against the local stand-ins",
+  "status": "To Do",
+  "sprint": "Sprint 1",
+  "priority": "Highest",
+  "story_points": 3,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-aws"
+  ],
+  "labels": [
+    "spike"
+  ],
+  "aws_equivalent": "S3, SQS, DynamoDB",
+  "user_story": {
+    "as_a": "developer",
+    "i_want": "small throwaway programs proving aws-sdk-s3, aws-sdk-sqs and aws-sdk-dynamodb work against RustFS, ElasticMQ and DynamoDB Local",
+    "so_that": "we discover protocol and config gotchas before building real features on them"
+  },
+  "description": "Write three examples under `crates/stratum-aws/examples/` and run them with `cargo run -p stratum-aws --example <name>`. This is your first async Rust: `#[tokio::main]`, `.await` and `?` on SDK results. Record findings in `docs/spikes/STR-104-aws-sdk-local.md`. Then promote the working client-building code into `stratum-aws` as reusable constructors that use the local endpoint when configured and real AWS otherwise.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "the stack is up",
+      "when": "the S3 example runs",
+      "then": "it puts an object, lists it by prefix, gets it back and the bytes are equal"
+    },
+    {
+      "id": "AC2",
+      "given": "the stack is up",
+      "when": "the SQS example runs",
+      "then": "it resolves the raw-files queue URL, sends, long-poll receives and deletes a message; a second receive returns nothing"
+    },
+    {
+      "id": "AC3",
+      "given": "the stack is up",
+      "when": "the DynamoDB example runs",
+      "then": "it creates a temporary table, puts and gets an item, then deletes the table"
+    },
+    {
+      "id": "AC4",
+      "given": "the spike notes",
+      "when": "I read them",
+      "then": "every non-default setting is listed (endpoint URL, path-style, checksum mode, region, credentials) along with whether ElasticMQ's JSON protocol worked"
+    },
+    {
+      "id": "AC5",
+      "given": "stratum-aws",
+      "when": "a constructor is called with no endpoint configured",
+      "then": "it falls back to the default AWS config chain (no local overrides)"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "async/await and `#[tokio::main]`",
+    "Futures are lazy until awaited",
+    "The `?` operator with SDK error types",
+    "The builder pattern (very common in Rust APIs)",
+    "`Option<String>` for optional config",
+    "`cargo run --example`"
+  ],
+  "technical_notes": [
+    "S3 against a non-AWS endpoint needs path-style addressing (`force_path_style`).",
+    "If PutObject fails with checksum or signature errors, set request checksum calculation to 'when required'.",
+    "Credentials can come from env vars (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY) matching your RustFS keys; DynamoDB Local and ElasticMQ accept any values."
+  ],
+  "dependencies": {
+    "blocked_by": [
+      "STR-102",
+      "STR-103"
+    ],
+    "blocks": [
+      "STR-205",
+      "STR-401",
+      "STR-403",
+      "STR-404"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-s3-example.json",
+    "T2-sqs-example.json",
+    "T3-dynamodb-example.json",
+    "T4-notes-and-promote.json"
+  ],
+  "estimate_hours_total": 7.5,
+  "references": [
+    {
+      "title": "AWS SDK for Rust developer guide",
+      "url": "https://docs.aws.amazon.com/sdk-for-rust/latest/dg/welcome.html"
+    },
+    {
+      "title": "aws-config docs",
+      "url": "https://docs.rs/aws-config/latest/aws_config/"
+    },
+    {
+      "title": "aws-sdk-s3 docs",
+      "url": "https://docs.rs/aws-sdk-s3/latest/aws_sdk_s3/"
+    },
+    {
+      "title": "aws-sdk-sqs docs",
+      "url": "https://docs.rs/aws-sdk-sqs/latest/aws_sdk_sqs/"
+    },
+    {
+      "title": "aws-sdk-dynamodb docs",
+      "url": "https://docs.rs/aws-sdk-dynamodb/latest/aws_sdk_dynamodb/"
+    },
+    {
+      "title": "AWS SDKs: S3 data integrity protections (checksum defaults)",
+      "url": "https://docs.aws.amazon.com/sdkref/latest/guide/feature-dataintegrity.html"
+    },
+    {
+      "title": "The Rust Book ch.17: Async & await",
+      "url": "https://doc.rust-lang.org/book/ch17-00-async-await.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

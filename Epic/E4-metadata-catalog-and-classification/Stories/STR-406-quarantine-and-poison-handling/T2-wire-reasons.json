@@ -1,0 +1,18 @@
+{
+  "key": "STR-406-T2",
+  "type": "Sub-task",
+  "parent": "STR-406",
+  "title": "Wire reason codes from classify",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "one place mapping errors to reasons",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

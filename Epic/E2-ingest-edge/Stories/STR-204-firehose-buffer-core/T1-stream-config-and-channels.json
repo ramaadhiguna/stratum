@@ -1,0 +1,26 @@
+{
+  "key": "STR-204-T1",
+  "type": "Sub-task",
+  "parent": "STR-204",
+  "title": "Stream config and channel wiring",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "FirehoseSettings with per-stream limits",
+      "done": false
+    },
+    {
+      "item": "spawn one task per stream",
+      "done": false
+    },
+    {
+      "item": "return Sender handles",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

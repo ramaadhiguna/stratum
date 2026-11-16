@@ -1,0 +1,30 @@
+{
+  "key": "STR-103-T1",
+  "type": "Sub-task",
+  "parent": "STR-103",
+  "title": "Write docker-compose.yml with the four infrastructure services",
+  "status": "To Do",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "RustFS with S3 and console ports, credentials from env, named volume",
+      "done": false
+    },
+    {
+      "item": "ElasticMQ native image with ports 9324/9325 and mounted config",
+      "done": false
+    },
+    {
+      "item": "DynamoDB Local with -sharedDb (decide in-memory vs persisted)",
+      "done": false
+    },
+    {
+      "item": "Postgres with pinned major version, database `stratum`, named volume",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

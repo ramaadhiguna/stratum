@@ -1,0 +1,18 @@
+{
+  "key": "STR-302-T5",
+  "type": "Sub-task",
+  "parent": "STR-302",
+  "title": "Enable flags and schedule overrides from config",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 1,
+  "checklist": [
+    {
+      "item": "disabled jobs not registered",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

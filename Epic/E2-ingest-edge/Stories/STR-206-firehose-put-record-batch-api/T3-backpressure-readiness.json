@@ -1,0 +1,22 @@
+{
+  "key": "STR-206-T3",
+  "type": "Sub-task",
+  "parent": "STR-206",
+  "title": "Backpressure and readiness mapping",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "429 to 503 + Retry-After",
+      "done": false
+    },
+    {
+      "item": "/readyz checks Firehose",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

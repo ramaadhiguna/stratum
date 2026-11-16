@@ -1,0 +1,26 @@
+{
+  "key": "STR-605-T3",
+  "type": "Sub-task",
+  "parent": "STR-605",
+  "title": "dlq redrive",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "send then delete",
+      "done": false
+    },
+    {
+      "item": "ledger reset",
+      "done": false
+    },
+    {
+      "item": "--max",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

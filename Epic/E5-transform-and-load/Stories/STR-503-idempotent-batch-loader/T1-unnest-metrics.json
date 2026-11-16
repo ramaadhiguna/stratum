@@ -1,0 +1,22 @@
+{
+  "key": "STR-503-T1",
+  "type": "Sub-task",
+  "parent": "STR-503",
+  "title": "UNNEST insert for metrics",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "column vectors",
+      "done": false
+    },
+    {
+      "item": "chunking",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

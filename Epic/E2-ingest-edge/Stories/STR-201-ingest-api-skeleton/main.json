@@ -1,0 +1,107 @@
+{
+  "key": "STR-201",
+  "type": "Story",
+  "epic": "STR-E2",
+  "title": "Ingest API skeleton: health, readiness & graceful shutdown",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 3,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-ingest-api"
+  ],
+  "labels": [],
+  "aws_equivalent": "API Gateway",
+  "user_story": {
+    "as_a": "operator",
+    "i_want": "the ingest API to start, expose health and readiness endpoints, and shut down gracefully",
+    "so_that": "it can be run and probed like any production service"
+  },
+  "description": "An Axum app on a configurable address (default 0.0.0.0:8080). `GET /healthz` is liveness (always 200) and `GET /readyz` is readiness (it checks Firehose from STR-206 onward). An `AppState` is shared through `Arc`. tower-http layers add tracing, a request body limit (default 4 MiB), a timeout and request IDs. Graceful shutdown on SIGINT/SIGTERM.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "the service is running",
+      "when": "I call GET /healthz",
+      "then": "it returns 200 with {\"status\":\"ok\"}"
+    },
+    {
+      "id": "AC2",
+      "given": "a slow request is in flight",
+      "when": "I press Ctrl+C",
+      "then": "the request completes, then the process exits 0 and logs 'shutdown complete'"
+    },
+    {
+      "id": "AC3",
+      "given": "a body larger than the limit",
+      "when": "it is POSTed",
+      "then": "the response is 413"
+    },
+    {
+      "id": "AC4",
+      "given": "any request",
+      "when": "it completes",
+      "then": "the log line has method, path, status, latency and request id; the response has an x-request-id header"
+    },
+    {
+      "id": "AC5",
+      "given": "the router",
+      "when": "it is built by a function returning Router",
+      "then": "a test calls it in-process with `oneshot` without binding a port"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "async fn handlers",
+    "Extractors (State, Json)",
+    "IntoResponse",
+    "Arc<T> and Clone for shared state",
+    "tokio::signal",
+    "tower layers"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-106",
+      "STR-107"
+    ],
+    "blocks": [
+      "STR-202",
+      "STR-606"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "axum docs",
+      "url": "https://docs.rs/axum/latest/axum/"
+    },
+    {
+      "title": "axum: extractors",
+      "url": "https://docs.rs/axum/latest/axum/extract/index.html"
+    },
+    {
+      "title": "tower-http docs",
+      "url": "https://docs.rs/tower-http/latest/tower_http/"
+    },
+    {
+      "title": "Tokio topics: Graceful shutdown",
+      "url": "https://tokio.rs/tokio/topics/shutdown"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

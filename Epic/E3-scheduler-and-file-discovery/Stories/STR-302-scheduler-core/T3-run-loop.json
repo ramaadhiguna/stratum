@@ -1,0 +1,26 @@
+{
+  "key": "STR-302-T3",
+  "type": "Sub-task",
+  "parent": "STR-302",
+  "title": "Per-job loop with timeout and overlap guard",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 4,
+  "checklist": [
+    {
+      "item": "sleep_until next fire",
+      "done": false
+    },
+    {
+      "item": "spawn the run",
+      "done": false
+    },
+    {
+      "item": "skip if still running",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

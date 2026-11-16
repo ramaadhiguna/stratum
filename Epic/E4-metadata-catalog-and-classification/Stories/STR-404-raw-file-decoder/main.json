@@ -1,0 +1,100 @@
+{
+  "key": "STR-404",
+  "type": "Story",
+  "epic": "STR-E4",
+  "title": "Streaming decoder for gzip NDJSON files",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-worker"
+  ],
+  "labels": [],
+  "aws_equivalent": "S3 GetObject",
+  "user_story": {
+    "as_a": "classify worker",
+    "i_want": "to stream-decode a gzip NDJSON file from S3 line by line",
+    "so_that": "large files don't need to fit in memory and one bad line doesn't kill the file"
+  },
+  "description": "The chain is: GetObject, then ByteStream into AsyncRead, then an async-compression gzip decoder, then a BufReader reading lines, then `serde_json::from_str::<IngestedRecord>()` per line. It yields `DecodedLine {line_no, result}`. Lines over 1 MiB and empty lines are handled explicitly. The core function is generic over any `AsyncBufRead + Unpin`, so tests use in-memory bytes. Errors are classified: a corrupt or truncated gzip is fatal (Reject), and a network error mid-stream is retryable (Retry).",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "a 50 MB (uncompressed) file",
+      "when": "it is decoded",
+      "then": "peak memory stays well below the file size (measurement noted in the PR)"
+    },
+    {
+      "id": "AC2",
+      "given": "1,000 lines including 3 malformed ones",
+      "when": "the file is decoded",
+      "then": "997 records are Ok and 3 errors carry the correct line numbers"
+    },
+    {
+      "id": "AC3",
+      "given": "a truncated gzip file",
+      "when": "it is decoded",
+      "then": "a fatal (non-retryable) error is returned"
+    },
+    {
+      "id": "AC4",
+      "given": "empty lines",
+      "when": "the file is decoded",
+      "then": "they are skipped silently"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "AsyncRead / AsyncBufRead traits",
+    "Generic functions over R: AsyncBufRead + Unpin",
+    "Pin and Unpin (just enough)",
+    "Streams or a next_line loop",
+    "Error enums: retryable vs fatal"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-105",
+      "STR-104"
+    ],
+    "blocks": [
+      "STR-405"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-s3-to-asyncread.json",
+    "T2-gzip-lines.json",
+    "T3-error-classes.json",
+    "T4-tests-and-memory.json"
+  ],
+  "estimate_hours_total": 9,
+  "references": [
+    {
+      "title": "async-compression docs",
+      "url": "https://docs.rs/async-compression/latest/async_compression/"
+    },
+    {
+      "title": "aws-sdk-s3 docs",
+      "url": "https://docs.rs/aws-sdk-s3/latest/aws_sdk_s3/"
+    },
+    {
+      "title": "The Rust Book ch.17: Async & await",
+      "url": "https://doc.rust-lang.org/book/ch17-00-async-await.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

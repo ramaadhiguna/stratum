@@ -1,0 +1,26 @@
+{
+  "key": "STR-502-T2",
+  "type": "Sub-task",
+  "parent": "STR-502",
+  "title": "MetricTransformer + tests",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "finite values",
+      "done": false
+    },
+    {
+      "item": "counter rules",
+      "done": false
+    },
+    {
+      "item": "tags",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

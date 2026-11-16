@@ -1,0 +1,18 @@
+{
+  "key": "STR-304-T3",
+  "type": "Sub-task",
+  "parent": "STR-304",
+  "title": "Ledger insert + checkpoint update in one transaction",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "RETURNING new rows only",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

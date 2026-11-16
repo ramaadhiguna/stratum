@@ -1,0 +1,132 @@
+{
+  "key": "STR-105",
+  "type": "Story",
+  "epic": "STR-E1",
+  "title": "Telemetry domain model in stratum-core",
+  "status": "To Do",
+  "sprint": "Sprint 1",
+  "priority": "High",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-core"
+  ],
+  "labels": [],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "developer",
+    "i_want": "strongly typed Rust types for the telemetry envelope, categories and queue messages, with JSON (de)serialization and validation",
+    "so_that": "every service shares exactly one definition of what a record is"
+  },
+  "description": "In stratum-core, model:\n- `TelemetryEnvelope` (event_id UUID, source_id, name, occurred_at UTC timestamp, schema_version, attributes map, payload JSON value)\n- `IngestedRecord` (envelope + tenant_id + received_at)\n- the enums `DataType` (metric, event, log) and `ProductType` (web, mobile, iot, backend), serialized lowercase\n- typed payloads `MetricPayload`, `EventPayload`, `LogPayload` with a `LogLevel` enum\n- the queue messages `RawFileMessage` and `TransformMessage` (both carry `version`)\nAdd `validate()`, which returns *all* problems: empty source_id or name, name longer than 128 characters, occurred_at more than 7 days in the past or 5 minutes in the future, payload not a JSON object. Use the shapes in docs/architecture.md.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "the example envelope from docs/architecture.md",
+      "when": "it is deserialized and serialized again",
+      "then": "the JSON is equivalent and field names are snake_case"
+    },
+    {
+      "id": "AC2",
+      "given": "JSON with data_type \"trace\"",
+      "when": "it is deserialized into DataType",
+      "then": "deserialization fails with an error that names the unknown variant"
+    },
+    {
+      "id": "AC3",
+      "given": "an envelope with several problems",
+      "when": "validate() runs",
+      "then": "every problem is returned, not just the first (table-driven test with at least 6 cases)"
+    },
+    {
+      "id": "AC4",
+      "given": "DataType and ProductType",
+      "when": "converted with Display and FromStr",
+      "then": "the text form matches the JSON form exactly"
+    },
+    {
+      "id": "AC5",
+      "given": "the crate",
+      "when": "I run `cargo test -p stratum-core`",
+      "then": "all tests pass without any external service"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Structs and impl blocks",
+    "Enums: C-like vs carrying data",
+    "derive macros (Debug, Clone, PartialEq, Serialize, Deserialize)",
+    "serde attributes (rename_all, default, skip_serializing_if)",
+    "Option<T>, Vec<T>, HashMap/BTreeMap",
+    "Implementing Display and FromStr",
+    "String vs &str ownership",
+    "Unit tests with #[cfg(test)]"
+  ],
+  "technical_notes": [
+    "Pick one time crate (chrono or time) and use it everywhere; enable its serde feature.",
+    "uuid needs the `v7` and `serde` features.",
+    "Write validation by hand first (better learning); validator/garde crates are optional later."
+  ],
+  "dependencies": {
+    "blocked_by": [
+      "STR-102"
+    ],
+    "blocks": [
+      "STR-202",
+      "STR-204",
+      "STR-401",
+      "STR-404",
+      "STR-502"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-envelope-and-enums.json",
+    "T2-payloads-and-messages.json",
+    "T3-validation.json",
+    "T4-tests.json"
+  ],
+  "estimate_hours_total": 10,
+  "references": [
+    {
+      "title": "Stratum architecture",
+      "url": "../../../../docs/architecture.md"
+    },
+    {
+      "title": "The Rust Book ch.5: Structs",
+      "url": "https://doc.rust-lang.org/book/ch05-00-structs.html"
+    },
+    {
+      "title": "The Rust Book ch.6: Enums & pattern matching",
+      "url": "https://doc.rust-lang.org/book/ch06-00-enums.html"
+    },
+    {
+      "title": "The Rust Book ch.8: Common collections",
+      "url": "https://doc.rust-lang.org/book/ch08-00-common-collections.html"
+    },
+    {
+      "title": "The Rust Book ch.11: Writing tests",
+      "url": "https://doc.rust-lang.org/book/ch11-00-testing.html"
+    },
+    {
+      "title": "serde.rs: Serde guide",
+      "url": "https://serde.rs"
+    },
+    {
+      "title": "serde.rs: Field & container attributes",
+      "url": "https://serde.rs/attributes.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

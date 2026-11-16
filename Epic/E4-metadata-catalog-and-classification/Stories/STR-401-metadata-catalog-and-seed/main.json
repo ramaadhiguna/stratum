@@ -1,0 +1,115 @@
+{
+  "key": "STR-401",
+  "type": "Story",
+  "epic": "STR-E4",
+  "title": "Metadata catalog tables & seed CLI",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-cli",
+    "deploy"
+  ],
+  "labels": [],
+  "aws_equivalent": "DynamoDB",
+  "user_story": {
+    "as_a": "platform admin",
+    "i_want": "the sources and catalog tables created and seeded from a versioned file",
+    "so_that": "categorisation rules live as data, not code"
+  },
+  "description": "Add `stratum-cli catalog init`, which creates `stratum-sources` (PK source_id) and `stratum-catalog` (PK source_id, SK name) if absent. It is idempotent and uses on-demand billing. `stratum-cli catalog seed deploy/seed/catalog.toml` validates the file, then upserts with BatchWriteItem (25 items per call, retrying UnprocessedItems). The seed has at least 4 sources (one per product_type) and at least 10 catalog entries across metric/event/log, including one entry with `drop_fields = [\"email\"]`. `stratum-cli catalog get <source_id> [name]` prints an item.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "tables already exist",
+      "when": "`catalog init` runs again",
+      "then": "it succeeds without error"
+    },
+    {
+      "id": "AC2",
+      "given": "the seed file",
+      "when": "`catalog seed` runs twice",
+      "then": "items are upserted and the second run changes nothing; editing a value and re-seeding updates it"
+    },
+    {
+      "id": "AC3",
+      "given": "a fake client returning UnprocessedItems",
+      "when": "seeding runs",
+      "then": "the unprocessed items are retried with backoff"
+    },
+    {
+      "id": "AC4",
+      "given": "a seed entry with data_type \"trace\"",
+      "when": "seeding runs",
+      "then": "it fails before writing anything and names the entry"
+    },
+    {
+      "id": "AC5",
+      "given": "seeded items",
+      "when": "I read them with the AWS CLI against localhost:8000",
+      "then": "they match the seed file"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "HashMap<String, AttributeValue>",
+    "serde_dynamo to_item/from_item",
+    "toml + serde for the seed file",
+    "chunks(25) with retry loops",
+    "Matching specific SDK errors (ResourceInUseException)"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-104",
+      "STR-105"
+    ],
+    "blocks": [
+      "STR-402"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-table-init.json",
+    "T2-seed-format.json",
+    "T3-batch-write.json",
+    "T4-catalog-get.json"
+  ],
+  "estimate_hours_total": 8,
+  "references": [
+    {
+      "title": "DynamoDB: core components (partition & sort keys)",
+      "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html"
+    },
+    {
+      "title": "aws-sdk-dynamodb docs",
+      "url": "https://docs.rs/aws-sdk-dynamodb/latest/aws_sdk_dynamodb/"
+    },
+    {
+      "title": "serde_dynamo docs",
+      "url": "https://docs.rs/serde_dynamo/latest/serde_dynamo/"
+    },
+    {
+      "title": "toml crate docs",
+      "url": "https://docs.rs/toml/latest/toml/"
+    },
+    {
+      "title": "Stratum architecture",
+      "url": "../../../../docs/architecture.md"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

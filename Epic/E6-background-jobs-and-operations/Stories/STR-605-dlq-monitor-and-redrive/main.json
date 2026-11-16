@@ -1,0 +1,92 @@
+{
+  "key": "STR-605",
+  "type": "Story",
+  "epic": "STR-E6",
+  "title": "DLQ monitoring job & redrive CLI",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "Medium",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-scheduler",
+    "stratum-cli"
+  ],
+  "labels": [],
+  "aws_equivalent": "SQS DLQ redrive",
+  "user_story": {
+    "as_a": "operator",
+    "i_want": "to be warned when DLQs fill up and to replay messages after fixing a bug",
+    "so_that": "failed files are recoverable"
+  },
+  "description": "The `monitor-dlq` job runs every 5 min: GetQueueAttributes(ApproximateNumberOfMessages) on both DLQs, WARN if above 0, and set a gauge metric. `stratum-cli dlq peek <queue> --limit 5` shows bodies without deleting them. `stratum-cli dlq redrive <queue> --max 100` receives from the DLQ, sends to the source queue, deletes from the DLQ only after a successful send, and resets the ledger to `queued`. You implement redrive yourself rather than relying on emulator support for StartMessageMoveTask.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "messages in a DLQ",
+      "when": "the monitor job runs",
+      "then": "a WARN with the count is logged"
+    },
+    {
+      "id": "AC2",
+      "given": "messages in a DLQ",
+      "when": "I run `dlq peek`",
+      "then": "bodies are shown and the DLQ depth is unchanged afterwards"
+    },
+    {
+      "id": "AC3",
+      "given": "150 messages in a DLQ",
+      "when": "I run `dlq redrive --max 100`",
+      "then": "100 move to the source queue and 50 remain"
+    },
+    {
+      "id": "AC4",
+      "given": "a crash between send and delete",
+      "when": "redrive runs again",
+      "then": "a duplicate may occur but no message is ever lost"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "At-least-once ordering (send, then delete)",
+    "CLI ergonomics",
+    "Loops with limits"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-403",
+      "STR-306"
+    ],
+    "blocks": []
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-monitor-job.json",
+    "T2-peek.json",
+    "T3-redrive.json"
+  ],
+  "estimate_hours_total": 7,
+  "references": [
+    {
+      "title": "SQS: Dead-letter queues",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html"
+    },
+    {
+      "title": "aws-sdk-sqs docs",
+      "url": "https://docs.rs/aws-sdk-sqs/latest/aws_sdk_sqs/"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

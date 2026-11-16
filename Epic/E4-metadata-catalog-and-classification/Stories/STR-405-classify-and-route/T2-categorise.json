@@ -1,0 +1,30 @@
+{
+  "key": "STR-405-T2",
+  "type": "Sub-task",
+  "parent": "STR-405",
+  "title": "Per-record categorisation",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 4,
+  "checklist": [
+    {
+      "item": "source + entry lookups",
+      "done": false
+    },
+    {
+      "item": "drop_fields",
+      "done": false
+    },
+    {
+      "item": "required_fields",
+      "done": false
+    },
+    {
+      "item": "enrichment",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

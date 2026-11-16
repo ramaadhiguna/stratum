@@ -1,0 +1,22 @@
+{
+  "key": "STR-504-T1",
+  "type": "Sub-task",
+  "parent": "STR-504",
+  "title": "TransformHandler",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "decode, transform, load",
+      "done": false
+    },
+    {
+      "item": "error mapping",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

@@ -1,0 +1,26 @@
+{
+  "key": "STR-104-T1",
+  "type": "Sub-task",
+  "parent": "STR-104",
+  "title": "S3 example: put, list, get against RustFS",
+  "status": "To Do",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "shared config with endpoint override",
+      "done": false
+    },
+    {
+      "item": "path-style S3 client",
+      "done": false
+    },
+    {
+      "item": "assert round-trip",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

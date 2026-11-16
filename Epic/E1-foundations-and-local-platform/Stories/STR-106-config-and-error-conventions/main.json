@@ -1,0 +1,108 @@
+{
+  "key": "STR-106",
+  "type": "Story",
+  "epic": "STR-E1",
+  "title": "Configuration loading & error-handling conventions",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 3,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-core"
+  ],
+  "labels": [],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "developer",
+    "i_want": "every service to load typed configuration from defaults, files and environment variables, and to share error-handling conventions",
+    "so_that": "services behave consistently and fail fast with clear messages"
+  },
+  "description": "Settings structs live in stratum-core, one per concern: `AwsSettings` (optional endpoint_url, region, force_path_style), `DatabaseSettings`, `FirehoseSettings`, and so on. Load them with the `config` crate in layers: `config/default.toml`, then `config/{env}.toml`, then env vars (`STRATUM__SECTION__KEY`). Conventions: library crates define error enums with thiserror; binaries use anyhow in main and add `.context(...)`. Secrets never appear in logs.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "a required setting is missing",
+      "when": "a service starts",
+      "then": "it exits non-zero with a message naming the missing key"
+    },
+    {
+      "id": "AC2",
+      "given": "`STRATUM__DATABASE__URL` is set",
+      "when": "settings load",
+      "then": "the env value overrides the file value (test)"
+    },
+    {
+      "id": "AC3",
+      "given": "a library returns its thiserror error",
+      "when": "main propagates it with `?` and context",
+      "then": "the printed error shows the whole context chain"
+    },
+    {
+      "id": "AC4",
+      "given": "settings containing a password or secret key",
+      "when": "they are printed with {:?}",
+      "then": "the secret values are redacted"
+    },
+    {
+      "id": "AC5",
+      "given": "the repo",
+      "when": "I open docs/adr/0001-config-and-errors.md",
+      "then": "a short ADR explains these choices"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Result<T, E> and `?` with From conversions",
+    "thiserror derive",
+    "anyhow::Context",
+    "A custom Debug impl",
+    "Deserializing nested config structs",
+    "The Default trait"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-102"
+    ],
+    "blocks": [
+      "STR-107",
+      "STR-201",
+      "STR-204",
+      "STR-301"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "The Rust Book ch.9: Error handling",
+      "url": "https://doc.rust-lang.org/book/ch09-00-error-handling.html"
+    },
+    {
+      "title": "thiserror docs",
+      "url": "https://docs.rs/thiserror/latest/thiserror/"
+    },
+    {
+      "title": "anyhow docs",
+      "url": "https://docs.rs/anyhow/latest/anyhow/"
+    },
+    {
+      "title": "config crate docs",
+      "url": "https://docs.rs/config/latest/config/"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

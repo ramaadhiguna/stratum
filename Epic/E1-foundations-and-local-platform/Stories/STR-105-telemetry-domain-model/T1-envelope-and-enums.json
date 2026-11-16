@@ -1,0 +1,26 @@
+{
+  "key": "STR-105-T1",
+  "type": "Sub-task",
+  "parent": "STR-105",
+  "title": "Envelope, IngestedRecord and the DataType/ProductType enums",
+  "status": "To Do",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "structs with serde derives",
+      "done": false
+    },
+    {
+      "item": "enums serialized lowercase",
+      "done": false
+    },
+    {
+      "item": "Display + FromStr",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

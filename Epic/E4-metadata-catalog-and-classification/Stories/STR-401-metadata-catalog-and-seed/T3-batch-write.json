@@ -1,0 +1,26 @@
+{
+  "key": "STR-401-T3",
+  "type": "Sub-task",
+  "parent": "STR-401",
+  "title": "BatchWriteItem with UnprocessedItems retry",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "chunk by 25",
+      "done": false
+    },
+    {
+      "item": "retry with backoff",
+      "done": false
+    },
+    {
+      "item": "fake client test",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

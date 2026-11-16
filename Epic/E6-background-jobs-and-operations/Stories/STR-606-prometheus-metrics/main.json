@@ -1,0 +1,84 @@
+{
+  "key": "STR-606",
+  "type": "Story",
+  "epic": "STR-E6",
+  "title": "Prometheus metrics for every service",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "Medium",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "all services",
+    "deploy"
+  ],
+  "labels": [],
+  "aws_equivalent": "CloudWatch metrics",
+  "user_story": {
+    "as_a": "operator",
+    "i_want": "key pipeline metrics on /metrics for every service",
+    "so_that": "I can see throughput, lag and errors at a glance"
+  },
+  "description": "Use the metrics facade with metrics-exporter-prometheus. Metrics: ingest_records_total{result}, firehose_buffer_bytes{stream}, firehose_flush_total{trigger}, s3_put_seconds (histogram), scheduler_job_runs_total{job,status}, discovery_lag_seconds, worker_messages_total{role,result}, worker_records_total{role,data_type,outcome}, dlq_depth{queue}. Optional compose profile `observability` with Prometheus and Grafana plus one provisioned dashboard.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "each service is running",
+      "when": "I GET /metrics",
+      "then": "Prometheus text containing its listed metrics is returned"
+    },
+    {
+      "id": "AC2",
+      "given": "all metric labels",
+      "when": "they are reviewed",
+      "then": "none are high-cardinality (no event_id or file_id)"
+    },
+    {
+      "id": "AC3",
+      "given": "the optional observability profile",
+      "when": "it is started",
+      "then": "a dashboard shows records/sec and DLQ depth"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Global recorder / facade pattern",
+    "counter!/histogram! macros",
+    "Label cardinality",
+    "&'static str vs String labels"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-201",
+      "STR-403"
+    ],
+    "blocks": []
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-exporter-wiring.json",
+    "T2-instrument-edge.json",
+    "T3-instrument-back.json",
+    "T4-observability-profile.json"
+  ],
+  "estimate_hours_total": 9,
+  "references": [
+    {
+      "title": "metrics-exporter-prometheus docs",
+      "url": "https://docs.rs/metrics-exporter-prometheus/latest/metrics_exporter_prometheus/"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

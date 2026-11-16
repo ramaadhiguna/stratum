@@ -1,0 +1,22 @@
+{
+  "key": "STR-502-T3",
+  "type": "Sub-task",
+  "parent": "STR-502",
+  "title": "EventTransformer + tests",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "properties object",
+      "done": false
+    },
+    {
+      "item": "length limits",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

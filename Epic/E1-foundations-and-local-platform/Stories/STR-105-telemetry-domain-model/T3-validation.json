@@ -1,0 +1,24 @@
+{
+  "key": "STR-105-T3",
+  "type": "Sub-task",
+  "parent": "STR-105",
+  "title": "validate() returning every problem",
+  "status": "To Do",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "ValidationError enum with field + reason",
+      "done": false
+    },
+    {
+      "item": "time-window checks take `now` as a parameter (testable)",
+      "done": false
+    }
+  ],
+  "hints": [
+    "Passing `now` in instead of reading the clock inside makes the function pure and easy to test."
+  ],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

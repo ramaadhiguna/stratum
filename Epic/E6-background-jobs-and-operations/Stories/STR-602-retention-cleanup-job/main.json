@@ -1,0 +1,83 @@
+{
+  "key": "STR-602",
+  "type": "Story",
+  "epic": "STR-E6",
+  "title": "Job: retention cleanup for Postgres and object storage",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "Medium",
+  "story_points": 3,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-scheduler"
+  ],
+  "labels": [],
+  "aws_equivalent": "S3 lifecycle rules",
+  "user_story": {
+    "as_a": "platform",
+    "i_want": "expired data removed from Postgres and object storage",
+    "so_that": "storage stays bounded"
+  },
+  "description": "The `retention-cleanup` job runs daily at 01:00. It drops telemetry partitions that are entirely older than retention (default 30 days), deletes raw/staged objects older than raw_retention_days (default 7) by listing date prefixes and calling DeleteObjects (≤1000 keys per call), and deletes ledger rows older than 30 days. It has a dry-run mode. Per-source retention from the catalog is out of scope.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "dry_run = true",
+      "when": "the job runs",
+      "then": "it logs what would be deleted and deletes nothing"
+    },
+    {
+      "id": "AC2",
+      "given": "partitions straddling the cutoff",
+      "when": "the job runs",
+      "then": "only partitions entirely older than the cutoff are dropped"
+    },
+    {
+      "id": "AC3",
+      "given": "2,500 expired objects",
+      "when": "the job runs",
+      "then": "they are deleted in 3 DeleteObjects calls"
+    }
+  ],
+  "out_of_scope": [
+    "Per-source retention_days from the catalog"
+  ],
+  "rust_concepts": [
+    "Date arithmetic",
+    "Building prefixes from dates",
+    "chunks()",
+    "Feature toggles via config"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-601"
+    ],
+    "blocks": []
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "PostgreSQL: Table partitioning",
+      "url": "https://www.postgresql.org/docs/current/ddl-partitioning.html"
+    },
+    {
+      "title": "aws-sdk-s3 docs",
+      "url": "https://docs.rs/aws-sdk-s3/latest/aws_sdk_s3/"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

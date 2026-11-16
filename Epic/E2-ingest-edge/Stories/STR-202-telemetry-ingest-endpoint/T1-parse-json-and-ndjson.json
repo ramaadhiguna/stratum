@@ -1,0 +1,26 @@
+{
+  "key": "STR-202-T1",
+  "type": "Sub-task",
+  "parent": "STR-202",
+  "title": "Parse JSON-array and NDJSON bodies by content type",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "content-type routing",
+      "done": false
+    },
+    {
+      "item": "batch size check",
+      "done": false
+    },
+    {
+      "item": "NDJSON line indices",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

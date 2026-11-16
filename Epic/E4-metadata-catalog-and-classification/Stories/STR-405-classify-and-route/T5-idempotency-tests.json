@@ -1,0 +1,26 @@
+{
+  "key": "STR-405-T5",
+  "type": "Sub-task",
+  "parent": "STR-405",
+  "title": "Idempotency and failure-mode tests",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "redelivery",
+      "done": false
+    },
+    {
+      "item": "DynamoDB down",
+      "done": false
+    },
+    {
+      "item": "unknown source",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

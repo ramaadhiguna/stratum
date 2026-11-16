@@ -1,0 +1,22 @@
+{
+  "key": "STR-202-T4",
+  "type": "Sub-task",
+  "parent": "STR-202",
+  "title": "Handler tests for every acceptance criterion",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "oneshot requests",
+      "done": false
+    },
+    {
+      "item": "fake sink assertions",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

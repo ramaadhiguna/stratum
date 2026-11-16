@@ -1,0 +1,66 @@
+{
+  "title": "Definition of Done (applies to every story)",
+  "updated": "2026-11-16",
+  "checklist": [
+    {
+      "id": "DOD1",
+      "area": "Acceptance",
+      "item": "Every acceptance criterion in main.json is met, and the PR description says how each one was verified."
+    },
+    {
+      "id": "DOD2",
+      "area": "Build",
+      "item": "`cargo build --workspace` succeeds with zero warnings."
+    },
+    {
+      "id": "DOD3",
+      "area": "Format",
+      "item": "`cargo fmt --all --check` passes."
+    },
+    {
+      "id": "DOD4",
+      "area": "Lint",
+      "item": "`cargo clippy --workspace --all-targets -- -D warnings` passes."
+    },
+    {
+      "id": "DOD5",
+      "area": "Tests",
+      "item": "New logic has unit tests; anything touching an external service has an integration test (may be #[ignore] and need the compose stack). `cargo test --workspace` passes."
+    },
+    {
+      "id": "DOD6",
+      "area": "Robustness",
+      "item": "No `unwrap()`/`expect()`/`panic!` on non-test code paths unless the invariant is documented in a comment."
+    },
+    {
+      "id": "DOD7",
+      "area": "Docs",
+      "item": "Public items have `///` doc comments; README/docs are updated when run steps, config or architecture change."
+    },
+    {
+      "id": "DOD8",
+      "area": "Config & secrets",
+      "item": "No hard-coded endpoints, credentials or tunables; everything comes from settings; secrets are never logged."
+    },
+    {
+      "id": "DOD9",
+      "area": "Observability",
+      "item": "Errors are logged once with context (tracing); important operations have spans."
+    },
+    {
+      "id": "DOD10",
+      "area": "Process",
+      "item": "Work is on a feature branch named `story/<KEY>-<slug>`, merged via PR after review (/code-review), with CI green."
+    },
+    {
+      "id": "DOD11",
+      "area": "Board",
+      "item": "Story main.json status set to Done, task checklists ticked, and an activity entry added."
+    },
+    {
+      "id": "DOD12",
+      "area": "Learning",
+      "item": "The PR description has a short 'What I learned' section (Rust concepts that clicked, gotchas hit)."
+    }
+  ]
+}

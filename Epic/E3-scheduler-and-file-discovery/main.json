@@ -1,0 +1,81 @@
+{
+  "key": "STR-E3",
+  "type": "Epic",
+  "title": "Scheduler & file discovery to SQS",
+  "status": "Backlog",
+  "summary": "Our own EventBridge-Scheduler-like cron service, with a first job that discovers new raw files and queues them.",
+  "goal": "A scheduler service runs cron jobs exactly once even with two instances, and new raw files become ledger rows and queue messages within about a minute.",
+  "aws_services_replaced": [
+    "EventBridge Scheduler (cron)",
+    "SQS (producer side)",
+    "RDS PostgreSQL (ledger)"
+  ],
+  "depends_on_epics": [
+    "STR-E1",
+    "STR-E2"
+  ],
+  "success_criteria": [
+    "Jobs fire on their cron schedule and every run is recorded.",
+    "Two scheduler instances never run the same job at the same time.",
+    "Every raw file is discovered exactly once, including late arrivals.",
+    "Discovered files are queued in batches of 10."
+  ],
+  "rust_learning_outcomes": [
+    "sqlx with compile-time checked queries and migrations",
+    "Trait objects for pluggable jobs",
+    "Cron parsing and time math",
+    "Postgres advisory locks and RAII guards",
+    "Paginated S3 listing"
+  ],
+  "out_of_scope": [
+    "A distributed scheduler beyond Postgres locks",
+    "UI for jobs"
+  ],
+  "stories": [
+    {
+      "key": "STR-301",
+      "title": "Postgres access layer & migrations (stratum schema)",
+      "story_points": 3,
+      "priority": "High",
+      "folder": "Stories/STR-301-postgres-access-and-migrations"
+    },
+    {
+      "key": "STR-302",
+      "title": "Scheduler core: cron jobs, run loop & run history",
+      "story_points": 8,
+      "priority": "High",
+      "folder": "Stories/STR-302-scheduler-core"
+    },
+    {
+      "key": "STR-303",
+      "title": "Single-runner guarantee with Postgres advisory locks",
+      "story_points": 3,
+      "priority": "Medium",
+      "folder": "Stories/STR-303-scheduler-single-runner-lock"
+    },
+    {
+      "key": "STR-304",
+      "title": "Job: discover new raw files into the ledger",
+      "story_points": 5,
+      "priority": "High",
+      "folder": "Stories/STR-304-discover-raw-files-job"
+    },
+    {
+      "key": "STR-305",
+      "title": "Enqueue discovered files to the raw-files queue",
+      "story_points": 3,
+      "priority": "High",
+      "folder": "Stories/STR-305-enqueue-discovered-files"
+    },
+    {
+      "key": "STR-306",
+      "title": "Jobs admin CLI: list, history, run now",
+      "story_points": 2,
+      "priority": "Low",
+      "folder": "Stories/STR-306-jobs-admin-cli"
+    }
+  ],
+  "total_story_points": 24,
+  "owner": "Rama",
+  "created": "2026-11-16"
+}

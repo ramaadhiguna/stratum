@@ -1,0 +1,26 @@
+{
+  "key": "STR-104-T3",
+  "type": "Sub-task",
+  "parent": "STR-104",
+  "title": "DynamoDB example: create table, put, get, delete",
+  "status": "To Do",
+  "assignee": "Rama",
+  "estimate_hours": 1.5,
+  "checklist": [
+    {
+      "item": "create table with a string partition key",
+      "done": false
+    },
+    {
+      "item": "put and get an item",
+      "done": false
+    },
+    {
+      "item": "clean up",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

@@ -1,0 +1,22 @@
+{
+  "key": "STR-403-T3",
+  "type": "Sub-task",
+  "parent": "STR-403",
+  "title": "Visibility heartbeat",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "spawned ticker",
+      "done": false
+    },
+    {
+      "item": "stopped when handler ends",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

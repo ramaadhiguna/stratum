@@ -1,0 +1,97 @@
+{
+  "key": "STR-E2",
+  "type": "Epic",
+  "title": "Ingest edge: API & Firehose to S3",
+  "status": "Backlog",
+  "summary": "HTTP ingest API plus our own Firehose-like buffering service that writes gzip NDJSON files into the raw bucket.",
+  "goal": "Telemetry sent over HTTP lands as gzip NDJSON files in `stratum-raw`, partitioned by hour, with backpressure under load and no data loss on shutdown.",
+  "aws_services_replaced": [
+    "API Gateway + Lambda (stratum-ingest-api)",
+    "Kinesis Data Firehose (stratum-firehose)"
+  ],
+  "depends_on_epics": [
+    "STR-E1"
+  ],
+  "success_criteria": [
+    "A producer can POST batches and gets per-record accept/reject results.",
+    "Firehose flushes on size or interval, whichever comes first, and keys sort by time.",
+    "Stopping Firehose with SIGTERM never loses accepted records.",
+    "A load generator can drive the edge at a chosen rate."
+  ],
+  "rust_learning_outcomes": [
+    "axum routing, extractors and shared state",
+    "tower middleware",
+    "Arc for shared ownership",
+    "tokio mpsc channels and select!",
+    "Timers and testing time",
+    "Compression with flate2",
+    "Retries with backoff",
+    "Graceful shutdown with CancellationToken",
+    "reqwest and clap"
+  ],
+  "out_of_scope": [
+    "TLS termination (assume a proxy in front)",
+    "Per-tenant rate limiting"
+  ],
+  "stories": [
+    {
+      "key": "STR-201",
+      "title": "Ingest API skeleton: health, readiness & graceful shutdown",
+      "story_points": 3,
+      "priority": "High",
+      "folder": "Stories/STR-201-ingest-api-skeleton"
+    },
+    {
+      "key": "STR-202",
+      "title": "POST /v1/telemetry with per-record validation",
+      "story_points": 5,
+      "priority": "High",
+      "folder": "Stories/STR-202-telemetry-ingest-endpoint"
+    },
+    {
+      "key": "STR-203",
+      "title": "API-key authentication & tenant resolution",
+      "story_points": 3,
+      "priority": "Medium",
+      "folder": "Stories/STR-203-api-key-auth"
+    },
+    {
+      "key": "STR-204",
+      "title": "Firehose: per-stream buffer with size/interval flush & gzip",
+      "story_points": 8,
+      "priority": "High",
+      "folder": "Stories/STR-204-firehose-buffer-core"
+    },
+    {
+      "key": "STR-205",
+      "title": "Firehose: S3 delivery with time-partitioned keys, retries & spool",
+      "story_points": 5,
+      "priority": "High",
+      "folder": "Stories/STR-205-firehose-s3-delivery"
+    },
+    {
+      "key": "STR-206",
+      "title": "Firehose PutRecordBatch HTTP API, client & backpressure",
+      "story_points": 5,
+      "priority": "High",
+      "folder": "Stories/STR-206-firehose-put-record-batch-api"
+    },
+    {
+      "key": "STR-207",
+      "title": "Firehose: flush everything on shutdown",
+      "story_points": 3,
+      "priority": "High",
+      "folder": "Stories/STR-207-firehose-graceful-shutdown"
+    },
+    {
+      "key": "STR-208",
+      "title": "Load generator: `stratum-cli generate`",
+      "story_points": 3,
+      "priority": "Medium",
+      "folder": "Stories/STR-208-load-generator-cli"
+    }
+  ],
+  "total_story_points": 35,
+  "owner": "Rama",
+  "created": "2026-11-16"
+}

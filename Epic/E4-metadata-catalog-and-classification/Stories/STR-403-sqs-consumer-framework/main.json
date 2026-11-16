@@ -1,0 +1,119 @@
+{
+  "key": "STR-403",
+  "type": "Story",
+  "epic": "STR-E4",
+  "title": "Reusable SQS consumer: polling, concurrency, heartbeats, shutdown",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 8,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-worker"
+  ],
+  "labels": [],
+  "aws_equivalent": "SQS ReceiveMessage / ChangeMessageVisibility / DeleteMessage",
+  "user_story": {
+    "as_a": "worker developer",
+    "i_want": "a reusable SQS consumer that handles polling, concurrency, visibility extension, deletion and shutdown",
+    "so_that": "each worker role only implements 'handle one message'"
+  },
+  "description": "Define a `MessageHandler` trait whose async `handle(&Message)` returns `HandlerResult::{Ack, Retry(reason), Reject(reason)}`. The consumer long-polls (WaitTimeSeconds 20, up to 10 messages), limits concurrency with a Semaphore (default 4), and runs a per-message heartbeat that extends visibility every timeout/2 while the handler runs. Ack deletes the message. Retry sets visibility to a backoff based on ApproximateReceiveCount. Reject logs and leaves the message for the DLQ. On shutdown it stops polling, waits for in-flight messages (with a timeout) and exits. Health and metrics are on :8083.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "concurrency 4 and 20 messages taking 2 s each",
+      "when": "the consumer runs",
+      "then": "never more than 4 are in flight and all 20 are acked"
+    },
+    {
+      "id": "AC2",
+      "given": "a handler running 3× longer than the visibility timeout (against ElasticMQ)",
+      "when": "it finishes",
+      "then": "the message was never redelivered meanwhile"
+    },
+    {
+      "id": "AC3",
+      "given": "a handler returning Retry",
+      "when": "the backoff elapses",
+      "then": "the message is redelivered with a higher receive count"
+    },
+    {
+      "id": "AC4",
+      "given": "a message failing 5 times",
+      "when": "the 5th receive ends",
+      "then": "it is in the DLQ"
+    },
+    {
+      "id": "AC5",
+      "given": "messages in flight",
+      "when": "SIGTERM is sent",
+      "then": "no new receives happen, in-flight work finishes and the process exits 0"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Semaphore and OwnedSemaphorePermit",
+    "'static tasks and Arc",
+    "select! between work and shutdown",
+    "Heartbeat task aborted on drop",
+    "Enums as results",
+    "Reading message attributes"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-104",
+      "STR-107"
+    ],
+    "blocks": [
+      "STR-405",
+      "STR-504",
+      "STR-605",
+      "STR-606"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-handler-trait.json",
+    "T2-polling-loop.json",
+    "T3-visibility-heartbeat.json",
+    "T4-ack-retry-reject.json",
+    "T5-shutdown-and-it.json"
+  ],
+  "estimate_hours_total": 15,
+  "references": [
+    {
+      "title": "SQS: Visibility timeout",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html"
+    },
+    {
+      "title": "SQS: Short and long polling",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html"
+    },
+    {
+      "title": "SQS: Dead-letter queues",
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html"
+    },
+    {
+      "title": "aws-sdk-sqs docs",
+      "url": "https://docs.rs/aws-sdk-sqs/latest/aws_sdk_sqs/"
+    },
+    {
+      "title": "Tokio topics: Graceful shutdown",
+      "url": "https://tokio.rs/tokio/topics/shutdown"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

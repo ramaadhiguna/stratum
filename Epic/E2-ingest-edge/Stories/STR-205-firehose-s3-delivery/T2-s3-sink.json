@@ -1,0 +1,22 @@
+{
+  "key": "STR-205-T2",
+  "type": "Sub-task",
+  "parent": "STR-205",
+  "title": "S3BatchSink with put_object",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "content type and encoding",
+      "done": false
+    },
+    {
+      "item": "uses the stratum-aws client",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

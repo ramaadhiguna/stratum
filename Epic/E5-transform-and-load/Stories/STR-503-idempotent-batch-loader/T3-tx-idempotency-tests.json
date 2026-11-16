@@ -1,0 +1,22 @@
+{
+  "key": "STR-503-T3",
+  "type": "Sub-task",
+  "parent": "STR-503",
+  "title": "Transaction and idempotency tests",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "double load",
+      "done": false
+    },
+    {
+      "item": "rollback",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

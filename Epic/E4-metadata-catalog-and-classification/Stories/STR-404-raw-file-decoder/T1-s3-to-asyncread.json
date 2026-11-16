@@ -1,0 +1,18 @@
+{
+  "key": "STR-404-T1",
+  "type": "Sub-task",
+  "parent": "STR-404",
+  "title": "S3 GetObject to AsyncRead",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "ByteStream into_async_read",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

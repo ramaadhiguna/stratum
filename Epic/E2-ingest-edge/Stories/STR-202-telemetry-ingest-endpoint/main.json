@@ -1,0 +1,113 @@
+{
+  "key": "STR-202",
+  "type": "Story",
+  "epic": "STR-E2",
+  "title": "POST /v1/telemetry with per-record validation",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-ingest-api"
+  ],
+  "labels": [],
+  "aws_equivalent": "API Gateway",
+  "user_story": {
+    "as_a": "telemetry producer",
+    "i_want": "to POST a batch of records and learn which were accepted or rejected and why",
+    "so_that": "one bad record doesn't fail my whole batch"
+  },
+  "description": "`POST /v1/telemetry` accepts `application/json` (an array of up to 500 envelopes) or `application/x-ndjson`. Each record is deserialized and validated on its own (STR-105). A well-formed batch always gets 200 with `{accepted, rejected:[{index, event_id?, errors[]}]}`. A malformed body, a non-array, or more than 500 records gets 400. Accepted records become `IngestedRecord` (tenant_id `default` until STR-203, received_at = now) and go to a `RecordSink` trait. Use an in-memory sink for now; the Firehose client replaces it in STR-206. All errors use one JSON shape `{error:{code,message}}` via a custom error type that implements IntoResponse.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "a batch of 3 valid records",
+      "when": "it is POSTed",
+      "then": "accepted = 3 and the sink received 3 records with received_at set"
+    },
+    {
+      "id": "AC2",
+      "given": "a batch where index 1 has no source_id",
+      "when": "it is POSTed",
+      "then": "accepted = 2 and rejected contains index 1 with the reason"
+    },
+    {
+      "id": "AC3",
+      "given": "501 records",
+      "when": "they are POSTed",
+      "then": "the response is 400 with code `batch_too_large`"
+    },
+    {
+      "id": "AC4",
+      "given": "an NDJSON body with blank lines and one malformed line",
+      "when": "it is POSTed",
+      "then": "blank lines are skipped and the malformed line is rejected with its line index"
+    },
+    {
+      "id": "AC5",
+      "given": "handler tests",
+      "when": "they run",
+      "then": "they use a fake RecordSink and need no network"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "serde_json::Value, then per-item from_value",
+    "Iterators: enumerate, map, partition, collect",
+    "Trait objects (Arc<dyn RecordSink>) vs generics",
+    "async fn in traits and why it is not dyn-compatible (use a boxed future or the async-trait crate)",
+    "Custom error enum + IntoResponse",
+    "match"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-201",
+      "STR-105"
+    ],
+    "blocks": [
+      "STR-203",
+      "STR-206",
+      "STR-208"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-parse-json-and-ndjson.json",
+    "T2-validate-and-respond.json",
+    "T3-record-sink.json",
+    "T4-tests.json"
+  ],
+  "estimate_hours_total": 11,
+  "references": [
+    {
+      "title": "axum: extractors",
+      "url": "https://docs.rs/axum/latest/axum/extract/index.html"
+    },
+    {
+      "title": "serde.rs: Serde guide",
+      "url": "https://serde.rs"
+    },
+    {
+      "title": "The Rust Book ch.13: Closures & iterators",
+      "url": "https://doc.rust-lang.org/book/ch13-00-functional-features.html"
+    },
+    {
+      "title": "The Rust Book ch.10.2: Traits",
+      "url": "https://doc.rust-lang.org/book/ch10-02-traits.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

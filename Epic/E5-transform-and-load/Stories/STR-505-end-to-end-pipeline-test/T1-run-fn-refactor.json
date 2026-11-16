@@ -1,0 +1,22 @@
+{
+  "key": "STR-505-T1",
+  "type": "Sub-task",
+  "parent": "STR-505",
+  "title": "lib + bin refactor: pub run() per service",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "CancellationToken parameter",
+      "done": false
+    },
+    {
+      "item": "thin mains",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

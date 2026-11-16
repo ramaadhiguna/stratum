@@ -1,0 +1,100 @@
+{
+  "key": "STR-505",
+  "type": "Story",
+  "epic": "STR-E5",
+  "title": "End-to-end pipeline test",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 8,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-e2e",
+    "ci"
+  ],
+  "labels": [
+    "testing"
+  ],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "developer",
+    "i_want": "an automated test that sends telemetry in and asserts rows come out",
+    "so_that": "I can refactor any stage with confidence"
+  },
+  "description": "First refactor every service so it exposes `pub async fn run(settings, shutdown: CancellationToken) -> anyhow::Result<()>` from its library and keeps `main` thin. The e2e test crate (with the compose stack up) starts all services in-process with fast settings: a 2 s buffer interval and a seconds-level cron for discovery. It then seeds the catalog, sends 1,000 records (2% invalid, 1% unknown source) and polls Postgres until the counts match or 90 s pass. Assert telemetry rows, ingest rejections, quarantine rows, all ledger rows loaded, and both DLQs empty. Add a CI job for it (nightly or on demand if slow).",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "the compose stack is up",
+      "when": "I run the e2e test command",
+      "then": "it passes in under 2 minutes"
+    },
+    {
+      "id": "AC2",
+      "given": "records are lost at some stage",
+      "when": "the test fails",
+      "then": "the message says which stage's counts don't match"
+    },
+    {
+      "id": "AC3",
+      "given": "every service",
+      "when": "I read its crate",
+      "then": "main only parses config and calls the library's run()"
+    },
+    {
+      "id": "AC4",
+      "given": "CI",
+      "when": "the e2e job is triggered",
+      "then": "it runs against service containers and reports results"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Integration tests (tests/ directory)",
+    "lib + bin crate pattern",
+    "Polling with timeouts",
+    "Test fixtures",
+    "CI service containers"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-504",
+      "STR-207",
+      "STR-305"
+    ],
+    "blocks": [
+      "STR-607"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-run-fn-refactor.json",
+    "T2-harness.json",
+    "T3-scenario-assertions.json",
+    "T4-ci-job.json"
+  ],
+  "estimate_hours_total": 12,
+  "references": [
+    {
+      "title": "The Rust Book ch.11: Writing tests",
+      "url": "https://doc.rust-lang.org/book/ch11-00-testing.html"
+    },
+    {
+      "title": "tokio-util: CancellationToken & TaskTracker",
+      "url": "https://docs.rs/tokio-util/latest/tokio_util/"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

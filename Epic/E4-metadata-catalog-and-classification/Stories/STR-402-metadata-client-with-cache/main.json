@@ -1,0 +1,98 @@
+{
+  "key": "STR-402",
+  "type": "Story",
+  "epic": "STR-E4",
+  "title": "Metadata client with TTL cache & request coalescing",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-worker"
+  ],
+  "labels": [],
+  "aws_equivalent": "DynamoDB GetItem",
+  "user_story": {
+    "as_a": "classify worker",
+    "i_want": "catalog lookups served from an in-memory cache with a TTL",
+    "so_that": "classifying millions of records doesn't hit DynamoDB once per record"
+  },
+  "description": "Define a `MetadataStore` trait with `source(id)` and `entry(source_id, name)`, both async and both returning `Result<Option<_>>`. Implement `DynamoMetadataStore`. Wrap any store in `CachedMetadataStore<S>` using moka's async cache: TTL 5 min, max 10k entries. Cache negative results (None) with a shorter TTL (30 s). Use moka's get_with/try_get_with so 100 concurrent misses on the same key make one DynamoDB call.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "1,000 concurrent lookups of one key",
+      "when": "the cache is cold",
+      "then": "the inner store is called exactly once (counting fake)"
+    },
+    {
+      "id": "AC2",
+      "given": "an unknown key",
+      "when": "it is looked up twice within 30 s and again after 30 s",
+      "then": "the inner store is called twice in total"
+    },
+    {
+      "id": "AC3",
+      "given": "the inner store returns an error",
+      "when": "a lookup happens",
+      "then": "the error is not cached and is surfaced as retryable"
+    },
+    {
+      "id": "AC4",
+      "given": "a catalog value changed",
+      "when": "the TTL expires",
+      "then": "the new value is returned"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Generic structs with trait bounds (CachedMetadataStore<S: MetadataStore>)",
+    "Send + Sync bounds",
+    "Arc and Clone",
+    "moka future::Cache",
+    "Option<Option<T>> pitfalls"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-401"
+    ],
+    "blocks": [
+      "STR-405"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-trait-and-dynamo-impl.json",
+    "T2-cache-wrapper.json",
+    "T3-tests.json"
+  ],
+  "estimate_hours_total": 8,
+  "references": [
+    {
+      "title": "moka docs (async cache)",
+      "url": "https://docs.rs/moka/latest/moka/"
+    },
+    {
+      "title": "The Rust Book ch.10.2: Traits",
+      "url": "https://doc.rust-lang.org/book/ch10-02-traits.html"
+    },
+    {
+      "title": "aws-sdk-dynamodb docs",
+      "url": "https://docs.rs/aws-sdk-dynamodb/latest/aws_sdk_dynamodb/"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

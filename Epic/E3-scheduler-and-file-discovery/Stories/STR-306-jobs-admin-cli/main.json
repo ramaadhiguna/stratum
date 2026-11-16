@@ -1,0 +1,80 @@
+{
+  "key": "STR-306",
+  "type": "Story",
+  "epic": "STR-E3",
+  "title": "Jobs admin CLI: list, history, run now",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "Low",
+  "story_points": 2,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-cli",
+    "stratum-scheduler"
+  ],
+  "labels": [],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "developer",
+    "i_want": "to list jobs, see recent runs and trigger a job immediately",
+    "so_that": "I don't wait for cron while developing"
+  },
+  "description": "Commands: `stratum-cli jobs list` (name, schedule, next fire), `stratum-cli jobs history <name> --limit 20`, and `stratum-cli jobs run <name>`, which runs the same Job implementation in-process and respects the advisory lock. To share job code between binaries, the scheduler crate exposes a library target.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "the scheduler config",
+      "when": "I run `jobs list`",
+      "then": "every job prints with its next fire time"
+    },
+    {
+      "id": "AC2",
+      "given": "past runs",
+      "when": "I run `jobs history heartbeat`",
+      "then": "the latest runs print newest first"
+    },
+    {
+      "id": "AC3",
+      "given": "the scheduler is currently running a job",
+      "when": "I run `jobs run` for that job",
+      "then": "the CLI refuses because the lock is held"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "A crate with both lib and bin targets",
+    "clap subcommands",
+    "Formatting tables"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-302",
+      "STR-303"
+    ],
+    "blocks": [
+      "STR-605"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "clap derive tutorial",
+      "url": "https://docs.rs/clap/latest/clap/_derive/_tutorial/index.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

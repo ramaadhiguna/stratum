@@ -1,0 +1,22 @@
+{
+  "key": "STR-105-T2",
+  "type": "Sub-task",
+  "parent": "STR-105",
+  "title": "Typed payloads and queue message structs",
+  "status": "To Do",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "MetricPayload, EventPayload, LogPayload, LogLevel",
+      "done": false
+    },
+    {
+      "item": "RawFileMessage, TransformMessage with version",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

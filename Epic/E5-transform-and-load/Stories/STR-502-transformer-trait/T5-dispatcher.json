@@ -1,0 +1,22 @@
+{
+  "key": "STR-502-T5",
+  "type": "Sub-task",
+  "parent": "STR-502",
+  "title": "DataType dispatcher",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "match on DataType",
+      "done": false
+    },
+    {
+      "item": "error mapping to quarantine",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

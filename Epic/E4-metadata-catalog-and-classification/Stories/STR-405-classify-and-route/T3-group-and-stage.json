@@ -1,0 +1,22 @@
+{
+  "key": "STR-405-T3",
+  "type": "Sub-task",
+  "parent": "STR-405",
+  "title": "Group by data_type and write staged files",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "deterministic keys",
+      "done": false
+    },
+    {
+      "item": "gzip NDJSON",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

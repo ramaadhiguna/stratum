@@ -1,0 +1,26 @@
+{
+  "key": "STR-104-T4",
+  "type": "Sub-task",
+  "parent": "STR-104",
+  "title": "Write spike notes and promote client builders into stratum-aws",
+  "status": "To Do",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "docs/spikes/STR-104-aws-sdk-local.md",
+      "done": false
+    },
+    {
+      "item": "pub async constructors per service",
+      "done": false
+    },
+    {
+      "item": "examples reuse the constructors",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

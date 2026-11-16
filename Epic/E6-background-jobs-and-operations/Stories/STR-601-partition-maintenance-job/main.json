@@ -1,0 +1,78 @@
+{
+  "key": "STR-601",
+  "type": "Story",
+  "epic": "STR-E6",
+  "title": "Job: create upcoming partitions",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "High",
+  "story_points": 3,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "stratum-scheduler"
+  ],
+  "labels": [],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "platform",
+    "i_want": "future daily partitions created automatically",
+    "so_that": "inserts never fall into the default partition"
+  },
+  "description": "The `maintain-partitions` job runs daily at 00:05 UTC and calls `telemetry.ensure_partitions(7)` (STR-501). It also counts rows sitting in default partitions and WARNs if any exist.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "the job runs",
+      "when": "it completes",
+      "then": "partitions exist for today through +7 for all 3 tables"
+    },
+    {
+      "id": "AC2",
+      "given": "the job runs twice",
+      "when": "the second run completes",
+      "then": "nothing changes and nothing errors"
+    },
+    {
+      "id": "AC3",
+      "given": "rows in a default partition",
+      "when": "the job runs",
+      "then": "a WARN reports the count per table, and job_runs.details lists created partitions"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Another Job trait impl",
+    "sqlx queries returning text rows"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-302",
+      "STR-501"
+    ],
+    "blocks": [
+      "STR-602"
+    ]
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [],
+  "estimate_hours_total": null,
+  "references": [
+    {
+      "title": "PostgreSQL: Table partitioning",
+      "url": "https://www.postgresql.org/docs/current/ddl-partitioning.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

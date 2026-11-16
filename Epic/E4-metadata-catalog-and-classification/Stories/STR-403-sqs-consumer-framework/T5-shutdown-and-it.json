@@ -1,0 +1,22 @@
+{
+  "key": "STR-403-T5",
+  "type": "Sub-task",
+  "parent": "STR-403",
+  "title": "Graceful shutdown + integration tests against ElasticMQ",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 4,
+  "checklist": [
+    {
+      "item": "CancellationToken",
+      "done": false
+    },
+    {
+      "item": "#[ignore] tests",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

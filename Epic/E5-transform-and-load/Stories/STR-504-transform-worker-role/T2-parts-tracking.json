@@ -1,0 +1,22 @@
+{
+  "key": "STR-504-T2",
+  "type": "Sub-task",
+  "parent": "STR-504",
+  "title": "Per-file part tracking (migration + repo)",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 3,
+  "checklist": [
+    {
+      "item": "expected vs loaded",
+      "done": false
+    },
+    {
+      "item": "loaded transition",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}

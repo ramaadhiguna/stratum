@@ -1,0 +1,84 @@
+{
+  "key": "STR-E4",
+  "type": "Epic",
+  "title": "Metadata catalog & classify worker",
+  "status": "Backlog",
+  "summary": "DynamoDB-backed metadata catalog plus the worker role that decodes raw files and categorises every record.",
+  "goal": "The worker consumes raw-files messages, stream-decodes each file, categorises every record (product_type, data_type) from the catalog, writes per-data_type staged files and transform messages, quarantines bad records and isolates poison files in the DLQ.",
+  "aws_services_replaced": [
+    "DynamoDB (catalog)",
+    "SQS (consumer side, DLQ)",
+    "S3 (staged bucket)"
+  ],
+  "depends_on_epics": [
+    "STR-E1",
+    "STR-E3"
+  ],
+  "success_criteria": [
+    "Catalog tables are created and seeded from a versioned file.",
+    "Catalog lookups are cached and coalesced.",
+    "A reusable SQS consumer handles concurrency, visibility heartbeats, retries and shutdown.",
+    "Files of any size stream through without loading fully into memory.",
+    "Bad records never fail a file; bad files end up in the DLQ with a ledger reason."
+  ],
+  "rust_learning_outcomes": [
+    "DynamoDB attribute maps and serde_dynamo",
+    "Generics with trait bounds",
+    "Caching with moka",
+    "Semaphore-bounded concurrency",
+    "AsyncRead/AsyncBufRead streaming",
+    "Retryable vs fatal error design",
+    "HashMap entry API for grouping"
+  ],
+  "out_of_scope": [
+    "Catalog admin UI",
+    "Schema registry with versioned evolution beyond schema_version passthrough"
+  ],
+  "stories": [
+    {
+      "key": "STR-401",
+      "title": "Metadata catalog tables & seed CLI",
+      "story_points": 5,
+      "priority": "High",
+      "folder": "Stories/STR-401-metadata-catalog-and-seed"
+    },
+    {
+      "key": "STR-402",
+      "title": "Metadata client with TTL cache & request coalescing",
+      "story_points": 5,
+      "priority": "High",
+      "folder": "Stories/STR-402-metadata-client-with-cache"
+    },
+    {
+      "key": "STR-403",
+      "title": "Reusable SQS consumer: polling, concurrency, heartbeats, shutdown",
+      "story_points": 8,
+      "priority": "High",
+      "folder": "Stories/STR-403-sqs-consumer-framework"
+    },
+    {
+      "key": "STR-404",
+      "title": "Streaming decoder for gzip NDJSON files",
+      "story_points": 5,
+      "priority": "High",
+      "folder": "Stories/STR-404-raw-file-decoder"
+    },
+    {
+      "key": "STR-405",
+      "title": "Classify handler: categorise records & route to staged batches",
+      "story_points": 8,
+      "priority": "Highest",
+      "folder": "Stories/STR-405-classify-and-route"
+    },
+    {
+      "key": "STR-406",
+      "title": "Quarantine table & poison-file handling",
+      "story_points": 5,
+      "priority": "High",
+      "folder": "Stories/STR-406-quarantine-and-poison-handling"
+    }
+  ],
+  "total_story_points": 36,
+  "owner": "Rama",
+  "created": "2026-11-16"
+}

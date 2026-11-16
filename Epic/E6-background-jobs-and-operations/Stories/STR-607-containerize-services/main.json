@@ -1,0 +1,86 @@
+{
+  "key": "STR-607",
+  "type": "Story",
+  "epic": "STR-E6",
+  "title": "Containerise all services",
+  "status": "Backlog",
+  "sprint": null,
+  "priority": "Low",
+  "story_points": 5,
+  "assignee": "Rama",
+  "reporter": "Claude",
+  "created": "2026-11-16",
+  "components": [
+    "deploy"
+  ],
+  "labels": [
+    "devops"
+  ],
+  "aws_equivalent": null,
+  "user_story": {
+    "as_a": "developer",
+    "i_want": "every Stratum service built into a small container image and runnable with compose",
+    "so_that": "the whole platform starts with one command"
+  },
+  "description": "Write one multi-stage Dockerfile using cargo-chef for dependency caching that builds all binaries in release, on a slim runtime base. Add per-service compose entries under profile `app` that depend on infrastructure healthchecks. Tune the release profile (thin LTO, codegen-units, strip) and record binary sizes before and after. This ties back to our 'native binaries' discussion: glibc vs musl linking.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "given": "the full compose with profile app",
+      "when": "I run it",
+      "then": "the whole pipeline works end to end"
+    },
+    {
+      "id": "AC2",
+      "given": "the built images",
+      "when": "I list them",
+      "then": "each is under 50 MB (actual sizes noted)"
+    },
+    {
+      "id": "AC3",
+      "given": "a source-only change",
+      "when": "the image is rebuilt",
+      "then": "the dependency layer is reused (cache hit)"
+    }
+  ],
+  "out_of_scope": [],
+  "rust_concepts": [
+    "Cargo release profiles",
+    "Static vs dynamic linking (glibc vs musl)",
+    "cargo-chef layer caching"
+  ],
+  "technical_notes": [],
+  "dependencies": {
+    "blocked_by": [
+      "STR-505"
+    ],
+    "blocks": []
+  },
+  "definition_of_done": {
+    "inherits": "../../../definition-of-done.json",
+    "additional": []
+  },
+  "tasks": [
+    "T1-dockerfile.json",
+    "T2-compose-app-profile.json",
+    "T3-size-tuning.json"
+  ],
+  "estimate_hours_total": 7,
+  "references": [
+    {
+      "title": "cargo-chef (Docker layer caching for Rust)",
+      "url": "https://github.com/LukeMathWalker/cargo-chef"
+    },
+    {
+      "title": "Cargo reference: Profiles",
+      "url": "https://doc.rust-lang.org/cargo/reference/profiles.html"
+    }
+  ],
+  "activity": [
+    {
+      "date": "2026-11-16",
+      "by": "Claude",
+      "note": "Created during planning spike."
+    }
+  ]
+}

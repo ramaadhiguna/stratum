@@ -1,0 +1,18 @@
+{
+  "key": "STR-604-T2",
+  "type": "Sub-task",
+  "parent": "STR-604",
+  "title": "Stuck-detection queries",
+  "status": "Backlog",
+  "assignee": "Rama",
+  "estimate_hours": 2,
+  "checklist": [
+    {
+      "item": "age + attempts filters",
+      "done": false
+    }
+  ],
+  "hints": [],
+  "done_when": "All checklist items done and the parent story's related acceptance criteria pass.",
+  "created": "2026-11-16"
+}
