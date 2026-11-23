@@ -3,21 +3,21 @@
   "type": "Sub-task",
   "parent": "STR-103",
   "title": "Add healthchecks and a bucket bootstrap one-shot",
-  "status": "To Do",
+  "status": "Done",
   "assignee": "Rama",
   "estimate_hours": 2,
   "checklist": [
     {
       "item": "healthcheck per service",
-      "done": false
+      "done": true
     },
     {
       "item": "bootstrap waits for RustFS healthy (depends_on condition)",
-      "done": false
+      "done": true
     },
     {
       "item": "creates buckets idempotently",
-      "done": false
+      "done": true
     }
   ],
   "hints": [],

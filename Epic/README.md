@@ -112,9 +112,9 @@ By the end of this epic, `docker compose up` gives a working fake AWS on the lap
 
 | Key | Story | Pts | Priority | Wave | Blocked by | Status |
 |---|---|---|---|---|---|---|
-| [STR-101](E1-foundations-and-local-platform/Stories/STR-101-install-docker-in-wsl2/main.json) | Install Docker Engine & Compose in WSL2 | 1 | Highest | 1 | — | To Do (Sprint 1) |
-| [STR-102](E1-foundations-and-local-platform/Stories/STR-102-cargo-workspace-skeleton/main.json) | Convert the repo into a Cargo workspace with crate skeletons | 3 | Highest | 1 | — | To Do (Sprint 1) |
-| [STR-103](E1-foundations-and-local-platform/Stories/STR-103-local-aws-stack-docker-compose/main.json) | Local AWS stand-ins with Docker Compose | 5 | Highest | 2 | STR-101 | To Do (Sprint 1) |
+| [STR-101](E1-foundations-and-local-platform/Stories/STR-101-install-docker-in-wsl2/main.json) | Install Docker Engine & Compose in WSL2 | 1 | Highest | 1 | — | In Review (Sprint 1) |
+| [STR-102](E1-foundations-and-local-platform/Stories/STR-102-cargo-workspace-skeleton/main.json) | Convert the repo into a Cargo workspace with crate skeletons | 3 | Highest | 1 | — | In Review (Sprint 1) |
+| [STR-103](E1-foundations-and-local-platform/Stories/STR-103-local-aws-stack-docker-compose/main.json) | Local AWS stand-ins with Docker Compose | 5 | Highest | 2 | STR-101 | In Review (Sprint 1) |
 | [STR-104](E1-foundations-and-local-platform/Stories/STR-104-spike-aws-sdk-rust-local/main.json) | Spike: AWS SDK for Rust against the local stand-ins | 3 | Highest | 3 | STR-102, STR-103 | To Do (Sprint 1) |
 | [STR-105](E1-foundations-and-local-platform/Stories/STR-105-telemetry-domain-model/main.json) | Telemetry domain model in stratum-core | 5 | High | 2 | STR-102 | To Do (Sprint 1) |
 | [STR-106](E1-foundations-and-local-platform/Stories/STR-106-config-and-error-conventions/main.json) | Configuration loading & error-handling conventions | 3 | High | 2 | STR-102 | Backlog |

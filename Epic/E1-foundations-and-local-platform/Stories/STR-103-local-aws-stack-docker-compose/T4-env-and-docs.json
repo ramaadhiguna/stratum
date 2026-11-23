@@ -3,17 +3,17 @@
   "type": "Sub-task",
   "parent": "STR-103",
   "title": "Add .env.example and a 'Run locally' README section",
-  "status": "To Do",
+  "status": "Done",
   "assignee": "Rama",
   "estimate_hours": 1,
   "checklist": [
     {
       "item": "`.env` in .gitignore",
-      "done": false
+      "done": true
     },
     {
-      "item": "README: start, stop, wipe, open RustFS console and ElasticMQ UI",
-      "done": false
+      "item": "README: start, stop, wipe, RustFS console, inspecting queues via the AWS CLI container",
+      "done": true
     }
   ],
   "hints": [],

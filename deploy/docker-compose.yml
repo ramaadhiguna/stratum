@@ -1,0 +1,114 @@
+# Free local stand-ins for the AWS services Stratum uses (see docs/aws-alternatives.md).
+#
+#   Start : docker compose -f deploy/docker-compose.yml up -d
+#   Status: docker compose -f deploy/docker-compose.yml ps
+#   Stop  : docker compose -f deploy/docker-compose.yml down        (keeps data)
+#   Wipe  : docker compose -f deploy/docker-compose.yml down -v     (deletes volumes)
+#
+# Values come from deploy/.env when present (copy deploy/.env.example); the defaults
+# below are dev-only and match .env.example.
+name: stratum
+
+services:
+  # --- S3 -------------------------------------------------------------------------------
+  rustfs:
+    image: rustfs/rustfs:1.0.6
+    environment:
+      RUSTFS_ACCESS_KEY: ${S3_ACCESS_KEY:-stratum}
+      RUSTFS_SECRET_KEY: ${S3_SECRET_KEY:-stratum-dev-secret}
+      RUSTFS_CONSOLE_ENABLE: "true"
+    ports:
+      - "9000:9000" # S3 API
+      - "9001:9001" # web console
+    volumes:
+      - rustfs-data:/data # named volume: keeps the image's UID 10001 ownership
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:9000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  # One-shot job: creates the buckets once RustFS is healthy, then exits (idempotent).
+  s3-bootstrap:
+    image: amazon/aws-cli:2.41.2
+    depends_on:
+      rustfs:
+        condition: service_healthy
+    environment:
+      AWS_ACCESS_KEY_ID: ${S3_ACCESS_KEY:-stratum}
+      AWS_SECRET_ACCESS_KEY: ${S3_SECRET_KEY:-stratum-dev-secret}
+      AWS_DEFAULT_REGION: ${AWS_REGION:-us-east-1}
+      AWS_ENDPOINT_URL: http://rustfs:9000
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        aws configure set default.s3.addressing_style path
+        for bucket in stratum-raw stratum-staged; do
+          if aws s3api head-bucket --bucket "$$bucket" 2>/dev/null; then
+            echo "bucket $$bucket already exists"
+          else
+            aws s3api create-bucket --bucket "$$bucket" >/dev/null && echo "created bucket $$bucket"
+          fi
+        done
+    restart: "no"
+
+  # --- SQS ------------------------------------------------------------------------------
+  elasticmq:
+    image: softwaremill/elasticmq-native:1.7.1
+    ports:
+      - "9324:9324" # SQS API (this native image ships no web UI; use the SQS API for queue depth)
+    volumes:
+      # Queues (and their DLQs) are created from this file at startup.
+      - ./elasticmq/elasticmq.conf:/opt/elasticmq.conf:ro
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9324"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  # --- DynamoDB -------------------------------------------------------------------------
+  dynamodb:
+    image: amazon/dynamodb-local:3.3.2
+    # -sharedDb: one database for every access key/region (otherwise tables "disappear"
+    # when credentials or region differ). -dbPath: persist to the volume below.
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "/home/dynamodblocal/data"]
+    # The image's user can't write to a fresh named volume (root-owned mount point).
+    user: root
+    ports:
+      - "8000:8000"
+    volumes:
+      - dynamodb-data:/home/dynamodblocal/data
+    healthcheck:
+      # Any HTTP answer (even 400) means the server is up; curl only fails on no connection.
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:8000 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+  # --- RDS PostgreSQL -------------------------------------------------------------------
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-stratum}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-stratum-dev}
+      POSTGRES_DB: ${POSTGRES_DB:-stratum}
+    ports:
+      - "5432:5432"
+    volumes:
+      # Postgres 18+ images keep data under /var/lib/postgresql/<major>/, so mount the parent.
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+
+volumes:
+  rustfs-data:
+  dynamodb-data:
+  postgres-data:

@@ -3,7 +3,7 @@
   "type": "Story",
   "epic": "STR-E1",
   "title": "Install Docker Engine & Compose in WSL2",
-  "status": "To Do",
+  "status": "In Review",
   "sprint": "Sprint 1",
   "priority": "Highest",
   "story_points": 1,
@@ -35,7 +35,7 @@
       "id": "AC2",
       "given": "Docker is installed",
       "when": "I run `docker compose version`",
-      "then": "a v2.x version prints"
+      "then": "the Compose plugin version prints (v5.x as of Nov 2026)"
     },
     {
       "id": "AC3",
@@ -55,7 +55,9 @@
   "technical_notes": [
     "Remove conflicting packages first (docker.io, podman-docker, etc.), as Docker's Ubuntu guide lists.",
     "Make sure `/etc/wsl.conf` contains `[boot]` with `systemd=true` so the Docker service starts with WSL.",
-    "Do the Linux post-install step (add your user to the `docker` group), then open a new shell."
+    "Do the Linux post-install step (add your user to the `docker` group), then open a new shell.",
+    "Compose is now versioned v5.x (the 'Compose V2' plugin generation continues under new major versions); `docker compose` is the command.",
+    "The docker group only applies to new login shells: open a new terminal / restart VS Code's WSL window after install."
   ],
   "dependencies": {
     "blocked_by": [],
@@ -88,6 +90,16 @@
       "date": "2026-11-16",
       "by": "Claude",
       "note": "Created during planning spike."
+    },
+    {
+      "date": "2026-11-20",
+      "by": "Claude",
+      "note": "Implemented by Claude at Rama's request. Docker Engine 29.10.0 + Compose plugin v5.8.0 installed from Docker's apt repo; docker/containerd enabled under systemd; user added to the docker group. Verified AC1-AC3 in a fresh login shell without sudo. AC4 (survives `wsl --shutdown`) left for Rama to confirm, since it can't be run from inside the session."
+    },
+    {
+      "date": "2026-11-22",
+      "by": "Claude",
+      "note": "AC4 verified: after a WSL restart (boot 2026-11-22 20:59), docker and containerd were active via systemd and `docker version` worked without sudo."
     }
   ]
 }
