@@ -3,5 +3,48 @@
 version = 4
 
 [[package]]
-name = "stratum"
+name = "stratum-aws"
 version = "0.1.0"
+
+[[package]]
+name = "stratum-cli"
+version = "0.1.0"
+dependencies = [
+ "stratum-core",
+]
+
+[[package]]
+name = "stratum-core"
+version = "0.1.0"
+
+[[package]]
+name = "stratum-db"
+version = "0.1.0"
+
+[[package]]
+name = "stratum-firehose"
+version = "0.1.0"
+dependencies = [
+ "stratum-core",
+]
+
+[[package]]
+name = "stratum-ingest-api"
+version = "0.1.0"
+dependencies = [
+ "stratum-core",
+]
+
+[[package]]
+name = "stratum-scheduler"
+version = "0.1.0"
+dependencies = [
+ "stratum-core",
+]
+
+[[package]]
+name = "stratum-worker"
+version = "0.1.0"
+dependencies = [
+ "stratum-core",
+]

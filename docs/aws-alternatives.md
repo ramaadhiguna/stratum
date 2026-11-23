@@ -61,7 +61,7 @@ No service lacked a free alternative, so no extra "build a clone" stories were n
 - **visibility timeout** and `ChangeMessageVisibility` (so a worker can extend its lease on a big file)
 - **long polling** (`WaitTimeSeconds`)
 - **dead-letter queues** via `deadLettersQueue { name, maxReceiveCount }` in its config file, which also **creates queues at startup**. That means no bootstrap script is needed.
-- A small web UI (port `9325`) to peek at queue depths. The SQS API is on `9324`.
+- The SQS API is on `9324`. The native image (1.7.1) ships **no web UI**, so read queue depth with `aws sqs get-queue-attributes` (verified in STR-103).
 
 **Risk to verify in the spike (STR-104):** The AWS SDKs moved SQS from the XML "Query" protocol to the **AWS JSON protocol** (2023). ElasticMQ supports the JSON protocol, and its 1.6/1.7 release notes include JSON-protocol fixes. Still, confirm `aws-sdk-sqs` for Rust can send, receive and delete against it before building on it.
 
@@ -131,7 +131,7 @@ Pin a major version tag (don't use `latest`). We rely on **declarative partition
 | `stratum-scheduler` (health/metrics) | 8082 |
 | `stratum-worker` (health/metrics) | 8083 |
 | RustFS (S3 API / console) | 9000 / 9001 |
-| ElasticMQ (SQS API / UI) | 9324 / 9325 |
+| ElasticMQ (SQS API) | 9324 |
 | DynamoDB Local | 8000 |
 | PostgreSQL | 5432 |
 

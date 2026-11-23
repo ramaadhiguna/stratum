@@ -3,25 +3,25 @@
   "type": "Sub-task",
   "parent": "STR-103",
   "title": "Write docker-compose.yml with the four infrastructure services",
-  "status": "To Do",
+  "status": "Done",
   "assignee": "Rama",
   "estimate_hours": 3,
   "checklist": [
     {
       "item": "RustFS with S3 and console ports, credentials from env, named volume",
-      "done": false
+      "done": true
     },
     {
-      "item": "ElasticMQ native image with ports 9324/9325 and mounted config",
-      "done": false
+      "item": "ElasticMQ native image with port 9324 and mounted config",
+      "done": true
     },
     {
       "item": "DynamoDB Local with -sharedDb (decide in-memory vs persisted)",
-      "done": false
+      "done": true
     },
     {
       "item": "Postgres with pinned major version, database `stratum`, named volume",
-      "done": false
+      "done": true
     }
   ],
   "hints": [],

@@ -1,0 +1,12 @@
+[package]
+name = "stratum-ingest-api"
+description = "HTTP ingest API for telemetry (stands in for API Gateway)."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+stratum-core.workspace = true

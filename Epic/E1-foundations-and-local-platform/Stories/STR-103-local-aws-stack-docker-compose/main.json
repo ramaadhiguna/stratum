@@ -3,7 +3,7 @@
   "type": "Story",
   "epic": "STR-E1",
   "title": "Local AWS stand-ins with Docker Compose",
-  "status": "To Do",
+  "status": "In Review",
   "sprint": "Sprint 1",
   "priority": "Highest",
   "story_points": 5,
@@ -67,7 +67,12 @@
   "technical_notes": [
     "RustFS runs as UID 10001, so named volumes avoid bind-mount permission issues.",
     "DynamoDB Local without `-sharedDb` keeps a separate database per access key and region: a classic 'my table vanished' trap.",
-    "Set your own RustFS access/secret keys; don't use the well-known defaults."
+    "Set your own RustFS access/secret keys; don't use the well-known defaults.",
+    "ElasticMQ native 1.7.1 ships no web UI / stats server (port 9325 never listens); read queue depth via `aws sqs get-queue-attributes`.",
+    "Postgres 18+ images store data under /var/lib/postgresql/<major>/: mount the volume at /var/lib/postgresql, not /var/lib/postgresql/data.",
+    "DynamoDB Local runs as a non-root user and a fresh named volume is root-owned, so the service runs with `user: root` to persist data.",
+    "RustFS console is at http://localhost:9001/rustfs/console/ (the root path returns 403). Health endpoint: /health on 9000.",
+    "The AWS CLI v2.41 (SQS JSON protocol) works against ElasticMQ 1.7.1, an early positive signal for STR-104."
   ],
   "dependencies": {
     "blocked_by": [
@@ -120,6 +125,11 @@
       "date": "2026-11-16",
       "by": "Claude",
       "note": "Created during planning spike."
+    },
+    {
+      "date": "2026-11-20",
+      "by": "Claude",
+      "note": "Implemented by Claude at Rama's request. deploy/docker-compose.yml (RustFS 1.0.6, ElasticMQ native 1.7.1, DynamoDB Local 3.3.2, postgres:18, aws-cli bootstrap), deploy/elasticmq/elasticmq.conf, deploy/.env.example, .env git-ignored. All services healthy in ~6 s; AC2-AC6 verified (incl. persistence across down/up and wipe with down -v)."
     }
   ]
 }

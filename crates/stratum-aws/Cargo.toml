@@ -1,0 +1,11 @@
+[package]
+name = "stratum-aws"
+description = "Builds S3, SQS and DynamoDB clients for the local stand-ins or real AWS."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]

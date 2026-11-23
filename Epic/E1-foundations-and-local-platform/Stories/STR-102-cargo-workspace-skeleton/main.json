@@ -3,7 +3,7 @@
   "type": "Story",
   "epic": "STR-E1",
   "title": "Convert the repo into a Cargo workspace with crate skeletons",
-  "status": "To Do",
+  "status": "In Review",
   "sprint": "Sprint 1",
   "priority": "Highest",
   "story_points": 3,
@@ -66,7 +66,8 @@
   ],
   "technical_notes": [
     "A virtual manifest must set `resolver` explicitly; use \"3\" to match edition 2024.",
-    "`cargo new --lib crates/stratum-core` creates a library crate; without `--lib` you get a binary."
+    "`cargo new --lib crates/stratum-core` creates a library crate; without `--lib` you get a binary.",
+    "Cargo 1.100 warns about [workspace.dependencies] entries no crate uses (`unused_workspace_dependencies`), so stratum-aws/stratum-db are added there only when a crate starts depending on them."
   ],
   "dependencies": {
     "blocked_by": [],
@@ -107,6 +108,11 @@
       "date": "2026-11-16",
       "by": "Claude",
       "note": "Created during planning spike."
+    },
+    {
+      "date": "2026-11-20",
+      "by": "Claude",
+      "note": "Implemented by Claude at Rama's request. Virtual manifest (resolver 3, workspace.package incl. rust-version 1.85) + 8 crates under crates/. Binaries print their name via stratum_core::banner (path dependency through [workspace.dependencies]). Clean build: 0 warnings; fmt, clippy -D warnings and tests pass. Old src/main.rs removed."
     }
   ]
 }

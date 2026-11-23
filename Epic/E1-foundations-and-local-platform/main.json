@@ -2,7 +2,7 @@
   "key": "STR-E1",
   "type": "Epic",
   "title": "Foundations & local platform",
-  "status": "To Do",
+  "status": "In Progress",
   "summary": "Cargo workspace, a one-command local stand-in for every AWS service, and the shared conventions every later epic builds on.",
   "goal": "By the end of this epic, `docker compose up` gives a working fake AWS on the laptop, the AWS SDK for Rust is proven against it, and the workspace has a shared domain model, config, errors, logging and CI.",
   "aws_services_replaced": [

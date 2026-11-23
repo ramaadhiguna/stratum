@@ -1,6 +1,20 @@
-[package]
-name = "stratum"
+# Workspace root: a "virtual manifest" (no [package] of its own), similar to a
+# root package.json that only declares npm workspaces.
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+# Metadata shared by every crate. A crate opts in with `version.workspace = true`, etc.
+[workspace.package]
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.85"
+license = "Apache-2.0"
+repository = "https://github.com/ramaadhiguna/stratum"
+publish = false
 
-[dependencies]
+# Dependency versions are declared once here; crates use `<name>.workspace = true`.
+# Only list what a crate actually uses: Cargo warns about unused entries.
+# (stratum-aws / stratum-db get added here once a crate depends on them.)
+[workspace.dependencies]
+stratum-core = { path = "crates/stratum-core" }

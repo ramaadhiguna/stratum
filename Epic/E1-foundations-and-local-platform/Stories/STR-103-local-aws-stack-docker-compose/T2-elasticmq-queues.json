@@ -3,21 +3,21 @@
   "type": "Sub-task",
   "parent": "STR-103",
   "title": "Declare queues and DLQs in ElasticMQ config",
-  "status": "To Do",
+  "status": "Done",
   "assignee": "Rama",
   "estimate_hours": 1.5,
   "checklist": [
     {
       "item": "raw-files + raw-files-dlq",
-      "done": false
+      "done": true
     },
     {
       "item": "transform + transform-dlq",
-      "done": false
+      "done": true
     },
     {
       "item": "maxReceiveCount = 5, default visibility 60 s",
-      "done": false
+      "done": true
     }
   ],
   "hints": [
