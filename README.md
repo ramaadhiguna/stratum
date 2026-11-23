@@ -23,7 +23,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh   # choose "1) Pr
 source "$HOME/.cargo/env"
 ```
 
-This project uses the 2024 edition, so it needs **Rust 1.85 or newer**. Run `rustup update` to get the latest stable release.
+This project needs **Rust 1.94.1 or newer** (the `rust-version` in `Cargo.toml`; the current AWS SDK crates require it). Run `rustup update` to get the latest stable release.
 
 ### 3. Docker Engine + Compose (inside WSL2)
 
@@ -152,4 +152,13 @@ awsl sqs get-queue-attributes --endpoint-url http://localhost:9324 \
   --queue-url http://localhost:9324/000000000000/raw-files --attribute-names All
 awsl dynamodb list-tables --endpoint-url http://localhost:8000      # tables
 docker compose -f deploy/docker-compose.yml exec postgres psql -U stratum -d stratum   # SQL shell
+```
+
+### Run the AWS SDK examples
+
+The examples in `crates/stratum-aws/examples/` talk to the running stack. The SDK reads credentials from environment variables, so export the RustFS keys in the same terminal first:
+
+```bash
+export AWS_ACCESS_KEY_ID=stratum AWS_SECRET_ACCESS_KEY=stratum-dev-secret
+cargo run -p stratum-aws --example s3_spike    # put, list and get an object on RustFS
 ```
