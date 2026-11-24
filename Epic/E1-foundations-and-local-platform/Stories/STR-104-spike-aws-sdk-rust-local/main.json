@@ -127,6 +127,11 @@
       "date": "2026-11-16",
       "by": "Claude",
       "note": "Created during planning spike."
+    },
+    {
+      "date": "2026-11-24",
+      "by": "Rama",
+      "note": "T4 implemented by Claude at Rama's request (T1-T3 written by Rama). stratum-aws now exposes AwsSettings, local_credentials() and s3_client/sqs_client/dynamodb_client: an endpoint per service enables local overrides (endpoint, static credentials, S3 path-style); no endpoint falls back to the default AWS chain (AC5, unit-tested). Examples share examples/common/mod.rs and need no AWS_* env vars. Spike notes: docs/spikes/STR-104-aws-sdk-local.md (AC4). Added aws-credential-types to workspace deps. Build 0 warnings; fmt, clippy -D warnings and 4 new tests pass; all three examples verified against the local stack."
     }
   ]
 }

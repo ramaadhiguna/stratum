@@ -23,7 +23,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh   # choose "1) Pr
 source "$HOME/.cargo/env"
 ```
 
-This project uses the 2024 edition, so it needs **Rust 1.85 or newer**. Run `rustup update` to get the latest stable release.
+This project needs **Rust 1.94.1 or newer** (the `rust-version` in `Cargo.toml`; the current AWS SDK crates require it). Run `rustup update` to get the latest stable release.
 
 ### 3. Docker Engine + Compose (inside WSL2)
 
@@ -129,7 +129,7 @@ docker compose -f deploy/docker-compose.yml down -v      # stop and wipe all dat
 At startup the stack:
 
 - creates the buckets `stratum-raw` and `stratum-staged` (the one-shot `s3-bootstrap` service)
-- creates the queues `raw-files` and `transform`, each with a dead-letter queue (`*-dlq`, after 5 receives) from `deploy/elasticmq/elasticmq.conf`
+- creates the queues `raw-files-queue` and `transform`, each with a dead-letter queue (`*-dlq`, after 5 receives) from `deploy/elasticmq/elasticmq.conf`
 
 DynamoDB tables are created later by `stratum-cli catalog init` (STR-401).
 
@@ -149,7 +149,19 @@ alias awsl='docker run --rm --network host -e AWS_ACCESS_KEY_ID=stratum -e AWS_S
 awsl s3 ls --endpoint-url http://localhost:9000                     # buckets
 awsl sqs list-queues --endpoint-url http://localhost:9324           # queues
 awsl sqs get-queue-attributes --endpoint-url http://localhost:9324 \
-  --queue-url http://localhost:9324/000000000000/raw-files --attribute-names All
+  --queue-url http://localhost:9324/000000000000/raw-files-queue --attribute-names All
 awsl dynamodb list-tables --endpoint-url http://localhost:8000      # tables
 docker compose -f deploy/docker-compose.yml exec postgres psql -U stratum -d stratum   # SQL shell
 ```
+
+### Run the AWS SDK examples
+
+The examples in `crates/stratum-aws/examples/` talk to the running stack. They build their clients with `stratum-aws` using the local settings in `examples/common/mod.rs`, so no environment variables are needed. If you changed the RustFS keys in `deploy/.env`, export `S3_ACCESS_KEY` and `S3_SECRET_KEY` with the same values.
+
+```bash
+cargo run -p stratum-aws --example s3_spike         # put, list and get an object on RustFS
+cargo run -p stratum-aws --example sqs_spike        # send, receive and delete a message on ElasticMQ
+cargo run -p stratum-aws --example dynamodb_spike   # create a table, put and get an item, drop the table
+```
+
+Findings from writing them are in [docs/spikes/STR-104-aws-sdk-local.md](docs/spikes/STR-104-aws-sdk-local.md).
