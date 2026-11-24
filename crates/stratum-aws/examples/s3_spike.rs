@@ -1,25 +1,16 @@
 // Imports
-use aws_config::BehaviorVersion;
-use aws_sdk_s3::config::Region;
 use aws_sdk_s3::primitives::ByteStream;
+
+// Local stack settings shared by all examples (examples/common/mod.rs).
+mod common;
 
 // Starts the main function with the tokio runtime, which is required for asynchronous operations in Rust.
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // This is the SDK Config, in a sense you setup endpoint, region, and other configurations for the AWS SDK.
-    let sdk_config = aws_config::defaults(BehaviorVersion::latest())
-        .endpoint_url("http://localhost:9000")
-        .region(Region::new("us-east-1"))
-        .load()
-        .await;
-
-    // This is the S3 Config, which is built from the SDK Config.
-    // It sets the force_path_style to true, tells S3 to put bucket names in the path instead of the hostname
-    // Which is often required for local S3-compatible services like MinIO.
-    let s3_config = aws_sdk_s3::config::Builder::from(&sdk_config)
-        .force_path_style(true)
-        .build();
-    let client = aws_sdk_s3::Client::from_conf(s3_config);
+    // The S3 client comes from stratum-aws: endpoint, region, local credentials and
+    // path-style addressing (bucket in the path, not the hostname) are set there.
+    let settings = common::local_settings();
+    let s3_client = stratum_aws::s3_client(&settings).await;
 
     // Values used to setup the S3 bucket and object. These are hardcoded for this example.
     let bucket_name = "stratum-raw";
@@ -27,7 +18,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let object_payload = "Hello, S3!";
 
     // Put object into the S3 bucket. This is an asynchronous operation, so we await its completion.
-    client
+    s3_client
         .put_object()
         .bucket(bucket_name)
         .key(object_key)
@@ -36,7 +27,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await?;
 
     // Confirm that the object was put into the bucket by printing a message to the console.
-    let listed = client
+    let listed = s3_client
         .list_objects_v2()
         .bucket(bucket_name)
         .prefix("spike/")
@@ -56,7 +47,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     assert!(found, "Object not found in bucket after put operation");
 
     // Get the object and compare the size
-    let get_object = client
+    let get_object = s3_client
         .get_object()
         .bucket(bucket_name)
         .key(object_key)
